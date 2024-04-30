@@ -1,21 +1,20 @@
 ///------------------------------------------------------------------------------------------------
-///  PlayerData.h                                                                                          
+///  NetObjects.h
 ///  TinyMMOCommon
 ///                                                                                                
 ///  Created by Alex Koukoulas on 30/04/2024
 ///------------------------------------------------------------------------------------------------
 
-#ifndef PlayerData_h
-#define PlayerData_h
-
 ///------------------------------------------------------------------------------------------------
 
-class PlayerDataTest
-{
-    PlayerDataTest();
-    
-    void foo();
-};
+BEGIN_SERIALIZABLE(PlayerData)
+VALUE(strutils::StringId, playerName)
+VALUE(glm::vec3, playerPosition)
+VALUE(glm::vec3, playerVelocity)
+VALUE(float, color)
+VALUE(bool, isLocal)
+VALUE(bool, invalidated)
+END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
-#endif /* PlayerData_h */
+
