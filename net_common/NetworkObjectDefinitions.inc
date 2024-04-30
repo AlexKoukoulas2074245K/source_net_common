@@ -18,3 +18,16 @@ END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
 
+BEGIN_SERIALIZABLE(LoginRequest)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
+
+BEGIN_SERIALIZABLE(LoginResponse)
+VALUE(strutils::StringId, playerName)
+VALUE(glm::vec3, playerPosition)
+VALUE(float, color)
+VALUE(bool, allowed)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
