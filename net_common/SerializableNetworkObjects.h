@@ -63,6 +63,7 @@ inline void parseValue(const nlohmann::json& json, const std::string& fieldName,
 
 // Construct class outline
 #define BEGIN_SERIALIZABLE(className) struct className { \
+inline static const char* ObjectCollectionHeader() { return #className; } \
 inline std::string SerializeToJsonString() const; \
 inline nlohmann::json SerializeToJson() const; \
 inline void DeserializeFromJson(const nlohmann::json& json);
