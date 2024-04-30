@@ -10,9 +10,9 @@
 
 ///------------------------------------------------------------------------------------------------
 
-class PlayerData
+class PlayerDataTest
 {
-    PlayerData();
+    PlayerDataTest();
     
     void foo();
 };
