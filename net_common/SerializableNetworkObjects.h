@@ -10,9 +10,24 @@
 
 ///------------------------------------------------------------------------------------------------
 
+#if __has_include(<engine/utils/StringUtils.h>)
 #include <engine/utils/StringUtils.h>
+#else
+#include "../util/StringUtils.h"
+#endif
+
+#if __has_include(<engine/utils/MathUtils.h>)
 #include <engine/utils/MathUtils.h>
+#else
+#include "../util/MathUtils.h"
+#endif
+
+#if __has_include(<nlohmann/json.hpp>)
 #include <nlohmann/json.hpp>
+#else
+#include "../util/Json.h"
+#endif
+
 #include <sstream>
 
 ///------------------------------------------------------------------------------------------------
@@ -30,6 +45,14 @@ inline std::string toString(const int i) { return std::to_string(i); }
 inline std::string toString(const long long l) { return std::to_string(l); }
 inline std::string toString(const glm::vec3& v) { return "{\"x\": " + std::to_string(v.x) + ", \"y\": " + std::to_string(v.y) + ", \"z\": " + std::to_string(v.z) + "}"; }
 
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const strutils::StringId& s) { json[fieldName] = s.GetString(); }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const std::string& s) { json[fieldName] = s; }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const float f) { json[fieldName] = f; }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const bool b) { json[fieldName] = b; }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const int i) { json[fieldName] = i; }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const long long l) { json[fieldName] = l; }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const glm::vec3& v) { json[fieldName]["x"] = v.x; json[fieldName]["y"] = v.y; json[fieldName]["z"] = v.z; }
+
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, strutils::StringId& fieldValue) { fieldValue = strutils::StringId(json[fieldName].get<std::string>()); }
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, std::string& fieldValue) { fieldValue = json[fieldName].get<std::string>(); }
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, float& fieldValue) { fieldValue = json[fieldName].get<float>(); }
@@ -41,6 +64,7 @@ inline void parseValue(const nlohmann::json& json, const std::string& fieldName,
 // Construct class outline
 #define BEGIN_SERIALIZABLE(className) struct className { \
 inline std::string SerializeToJsonString() const; \
+inline nlohmann::json SerializeToJson() const; \
 inline void DeserializeFromJson(const nlohmann::json& json);
 #define VALUE(typeName, fieldName)     typeName fieldName;
 #define END_SERIALIZABLE() };
@@ -51,10 +75,21 @@ inline void DeserializeFromJson(const nlohmann::json& json);
 #undef VALUE
 #undef END_SERIALIZABLE
 
-// Define serialization method
+// Define serialization to string method
 #define BEGIN_SERIALIZABLE(className) std::string className::SerializeToJsonString() const {std::stringstream s; s << "{";
 #define VALUE(typeName, fieldName)     s << "\"" << #fieldName << "\": " << toString(fieldName) << ",";
 #define END_SERIALIZABLE() s << "\"_\": 0}"; return s.str(); }
+
+#include "NetworkObjectDefinitions.inc"
+
+#undef BEGIN_SERIALIZABLE
+#undef VALUE
+#undef END_SERIALIZABLE
+
+// Define serialization to json method
+#define BEGIN_SERIALIZABLE(className) nlohmann::json className::SerializeToJson() const {nlohmann::json json;
+#define VALUE(typeName, fieldName)  addToJson(json, #fieldName, fieldName);
+#define END_SERIALIZABLE() return json; }
 
 #include "NetworkObjectDefinitions.inc"
 
