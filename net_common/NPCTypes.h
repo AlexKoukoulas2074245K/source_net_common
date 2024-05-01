@@ -1,12 +1,12 @@
 ///------------------------------------------------------------------------------------------------
-///  NetworkMessages.h
+///  NPCTypes.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 30/04/2024
+///  Created by Alex Koukoulas on 01/05/2024
 ///------------------------------------------------------------------------------------------------
 
-#ifndef NetworkMessages_h
-#define NetworkMessages_h
+#ifndef NPCTypes_h
+#define NPCTypes_h
 
 ///------------------------------------------------------------------------------------------------
 
@@ -23,22 +23,8 @@ namespace networking
 
 ///------------------------------------------------------------------------------------------------
 
-enum class MessageType
-{
-    UNKNOWN_MESSAGE                 = 0,
-    CS_PLAYER_STATE                 = 1,
-    SC_PLAYER_STATE_RESPONSE        = 2,
-    CS_REQUEST_LOGIN                = 3,
-    SC_REQUEST_LOGIN_RESPONSE       = 4,
-    CS_THROW_RANGED_WEAPON          = 5,
-    SC_THROW_RANGED_WEAPON_RESPONSE = 6
-};
-
-///-----------------------------------------------------------------------------------------------
-
-void PopulateMessageHeader(nlohmann::json& messageJson, const MessageType messageType);
-bool IsMessageOfType(const nlohmann::json& messageJson, const MessageType messageType);
-MessageType GetMessageType(const nlohmann::json& messageJson);
+inline constexpr int NPC_TYPE_UNKNOWN_NPC = 0;
+inline constexpr int NPC_TYPE_SHURIKEN    = 1;
 
 ///-----------------------------------------------------------------------------------------------
 
@@ -46,4 +32,4 @@ MessageType GetMessageType(const nlohmann::json& messageJson);
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* NetworkMessages_h */
+#endif /* NPCTypes_h */
