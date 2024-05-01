@@ -7,24 +7,15 @@
 
 ///------------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(PlayerData)
-VALUE(long long, playerId)
-VALUE(strutils::StringId, playerName)
-VALUE(glm::vec3, playerPosition)
-VALUE(glm::vec3, playerVelocity)
+BEGIN_SERIALIZABLE(WorldObjectData)
+VALUE(long long, objectId)
+VALUE(long long, parentObjectId)
+VALUE(strutils::StringId, objectName)
+VALUE(glm::vec3, objectPosition)
+VALUE(glm::vec3, objectVelocity)
 VALUE(float, color)
+VALUE(int, objectType)
 VALUE(bool, isLocal)
-VALUE(bool, invalidated)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(NPCData)
-VALUE(long long, npcId)
-VALUE(long long, playerParentId)
-VALUE(glm::vec3, npcPosition)
-VALUE(glm::vec3, npcVelocity)
-VALUE(int, npcType)
 VALUE(bool, invalidated)
 END_SERIALIZABLE()
 
