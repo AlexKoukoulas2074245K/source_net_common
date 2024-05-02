@@ -18,6 +18,7 @@ namespace networking
 inline constexpr int OBJ_TYPE_UNKNOWN      = 0;
 inline constexpr int OBJ_TYPE_PLAYER       = 1;
 inline constexpr int OBJ_TYPE_NPC_SHURIKEN = 2;
+inline constexpr int OBJ_TYPE_NPC_ENEMY    = 3;
 
 ///-----------------------------------------------------------------------------------------------
 
