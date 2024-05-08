@@ -15,6 +15,7 @@
 #else
 #include "../util/Json.h"
 #endif
+#include <string>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -32,6 +33,15 @@ enum class MessageType
     SC_REQUEST_LOGIN_RESPONSE       = 4,
     CS_THROW_RANGED_WEAPON          = 5,
     SC_THROW_RANGED_WEAPON_RESPONSE = 6
+};
+
+///-----------------------------------------------------------------------------------------------
+
+struct ServerResponseData
+{
+    std::string mResponse;
+    std::string mError;
+    long long mPingMillis;
 };
 
 ///-----------------------------------------------------------------------------------------------
