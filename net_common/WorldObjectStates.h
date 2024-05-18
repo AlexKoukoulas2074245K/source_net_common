@@ -15,9 +15,10 @@ namespace networking
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int OBJ_STATE_ALIVE   = 0;
-inline constexpr int OBJ_STATE_CHASING = 1;
-inline constexpr int OBJ_STATE_DEAD    = 2;
+inline constexpr int OBJ_STATE_ALIVE      = 0;
+inline constexpr int OBJ_STATE_CHASING    = 1;
+inline constexpr int OBJ_STATE_DEAD       = 2;
+inline constexpr int OBJ_STATE_RETREATING = 3;
 
 ///-----------------------------------------------------------------------------------------------
 
