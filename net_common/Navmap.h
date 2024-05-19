@@ -32,17 +32,17 @@ enum class NavmapTileType
 class Navmap
 {
 public:
-    Navmap(const std::vector<unsigned char>& navmapPixels, const int navmapSize)
+    Navmap(const unsigned char* navmapPixels, const int navmapSize)
     : mNavmapPixels(navmapPixels)
     , mNavmapSize(navmapSize)
     {}
     
     inline NavmapTileType GetNavmapTileAt(const int x, const int y)
     {
-        int r = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 0];
-        int g = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 1];
-        int b = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 2];
-        int a = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 3];
+        unsigned char r = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 0];
+        unsigned char g = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 1];
+        unsigned char b = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 2];
+        unsigned char a = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 3];
         
         if (a == 0)
         {
@@ -62,7 +62,7 @@ public:
     }
     
 private:
-    const std::vector<unsigned char> mNavmapPixels;
+    const unsigned char* mNavmapPixels;
     const int mNavmapSize;
 };
 
