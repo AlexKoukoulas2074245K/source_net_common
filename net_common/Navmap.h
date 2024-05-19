@@ -28,7 +28,10 @@ enum class NavmapTileType
 };
 
 ///------------------------------------------------------------------------------------------------
-
+/// Simple utility & lookup helper class encapsulating a navmap.
+/// the pixel data re non-owning here so that the client can easily provide
+/// a pointer to the loaded SDL surface data, and the server can just store the copy of
+/// the pixels somewhere whilst the navmap is alive.
 class Navmap
 {
 public:
