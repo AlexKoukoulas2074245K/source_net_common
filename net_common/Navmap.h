@@ -45,12 +45,12 @@ public:
     , mNavmapSize(navmapSize)
     {}
     
-    inline glm::ivec2 GetNavmapCoord(const glm::vec3& objectPosition, const glm::vec2& mapPosition, const float mapScale)
+    inline glm::ivec2 GetNavmapCoord(const glm::vec3& objectPosition, const glm::vec2& mapPosition, const float mapScale) const
     {
         return glm::ivec2(static_cast<int>(((objectPosition.x - (mapPosition.x * mapScale))/mapScale + 0.5f) * mNavmapSize), static_cast<int>((1.0f - ((objectPosition.y - (mapPosition.y * mapScale))/mapScale + 0.5f)) * mNavmapSize));
     }
     
-    inline NavmapTileType GetNavmapTileAt(const glm::ivec2& navmapCoord)
+    inline NavmapTileType GetNavmapTileAt(const glm::ivec2& navmapCoord) const
     {
         unsigned char r = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 0];
         unsigned char g = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 1];
