@@ -10,6 +10,11 @@
 
 ///------------------------------------------------------------------------------------------------
 
+#if __has_include(<engine/utils/MathUtils.h>)
+#include <engine/utils/MathUtils.h>
+#else
+#include "../util/MathUtils.h"
+#endif
 #include <vector>
 
 ///------------------------------------------------------------------------------------------------
@@ -40,12 +45,17 @@ public:
     , mNavmapSize(navmapSize)
     {}
     
-    inline NavmapTileType GetNavmapTileAt(const int x, const int y)
+    inline glm::ivec2 GetNavmapCoord(const glm::vec3& objectPosition, const glm::vec2& mapPosition, const float mapScale)
     {
-        unsigned char r = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 0];
-        unsigned char g = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 1];
-        unsigned char b = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 2];
-        unsigned char a = mNavmapPixels[(mNavmapSize * 4) * y + x * 4 + 3];
+        return glm::ivec2(static_cast<int>(((objectPosition.x - (mapPosition.x * mapScale))/mapScale + 0.5f) * mNavmapSize), static_cast<int>((1.0f - ((objectPosition.y - (mapPosition.y * mapScale))/mapScale + 0.5f)) * mNavmapSize));
+    }
+    
+    inline NavmapTileType GetNavmapTileAt(const glm::ivec2& navmapCoord)
+    {
+        unsigned char r = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 0];
+        unsigned char g = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 1];
+        unsigned char b = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 2];
+        unsigned char a = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 3];
         
         if (a == 0)
         {
