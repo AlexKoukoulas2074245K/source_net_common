@@ -46,9 +46,29 @@ struct ServerResponseData
 
 ///-----------------------------------------------------------------------------------------------
 
-void PopulateMessageHeader(nlohmann::json& messageJson, const MessageType messageType);
-bool IsMessageOfType(const nlohmann::json& messageJson, const MessageType messageType);
-MessageType GetMessageType(const nlohmann::json& messageJson);
+inline void PopulateMessageHeader(nlohmann::json& messageJson, const MessageType messageType)
+{
+    messageJson["messageType"] = static_cast<int>(messageType);
+}
+
+///-----------------------------------------------------------------------------------------------
+
+inline bool IsMessageOfType(const nlohmann::json& messageJson, const MessageType messageType)
+{
+    return messageJson.count("messageType") && static_cast<MessageType>(messageJson.at("messageType").get<int>()) == messageType;
+}
+
+///-----------------------------------------------------------------------------------------------
+
+inline MessageType GetMessageType(const nlohmann::json& messageJson)
+{
+    if (messageJson.count("messageType"))
+    {
+        return static_cast<MessageType>(messageJson.at("messageType").get<int>());
+    }
+    
+    return MessageType::UNKNOWN_MESSAGE;
+}
 
 ///-----------------------------------------------------------------------------------------------
 
