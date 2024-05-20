@@ -33,6 +33,42 @@ enum class NavmapTileType
 };
 
 ///------------------------------------------------------------------------------------------------
+
+inline glm::ivec4 GetColorFromNavmapTileType(const NavmapTileType tileType)
+{
+    switch (tileType)
+    {
+        case NavmapTileType::VOID: return glm::ivec4(0, 0, 0, 0);
+        case NavmapTileType::EMPTY: return glm::ivec4(255, 255, 255, 255);
+        case NavmapTileType::SOLID: return glm::ivec4(0, 0, 0, 255);
+        case NavmapTileType::WATER: return glm::ivec4(0, 0, 255, 255);
+    }
+    
+    return glm::ivec4(0);
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline NavmapTileType GetNavmapTileTypeFromColor(const glm::ivec4& color)
+{
+    if (color.a == 0)
+    {
+        return NavmapTileType::VOID;
+    }
+    
+    if (color.r == 0 && color.g == 0 && color.b > 0)
+    {
+        return NavmapTileType::WATER;
+    }
+    else if (color.r > 0 && color.g > 0 && color.b > 0)
+    {
+        return NavmapTileType::EMPTY;
+    }
+    
+    return NavmapTileType::SOLID;
+}
+
+///------------------------------------------------------------------------------------------------
 /// Simple utility & lookup helper class encapsulating a navmap.
 /// the pixel data re non-owning here so that the client can easily provide
 /// a pointer to the loaded SDL surface data, and the server can just store the copy of
@@ -65,21 +101,7 @@ public:
         unsigned char b = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 2];
         unsigned char a = mNavmapPixels[(mNavmapSize * 4) * navmapCoord.y + navmapCoord.x * 4 + 3];
         
-        if (a == 0)
-        {
-            return NavmapTileType::VOID;
-        }
-        
-        if (r == 0 && g == 0 && b > 0)
-        {
-            return NavmapTileType::WATER;
-        }
-        else if (r > 0 && g > 0 && b > 0)
-        {
-            return NavmapTileType::EMPTY;
-        }
-        
-        return NavmapTileType::SOLID;
+        return GetNavmapTileTypeFromColor(glm::ivec4(r, g, b, a));
     }
     
     inline int GetSize() const { return mNavmapSize; }
