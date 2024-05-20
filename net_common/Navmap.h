@@ -45,9 +45,17 @@ public:
     , mNavmapSize(navmapSize)
     {}
     
+    inline glm::vec3 GetMapPositionFromNavmapCoord(const glm::ivec2& navmapCoord, const glm::vec2& mapPosition, const float mapScale, const float positionZ) const
+    {
+        return glm::vec3(mapScale * ((static_cast<float>(navmapCoord.x))/mNavmapSize - 0.5f) + (mapPosition.x * mapScale),
+                         mapScale * (0.5f - (static_cast<float>(navmapCoord.y))/mNavmapSize) + (mapPosition.y * mapScale),
+                         positionZ);
+    }
+    
     inline glm::ivec2 GetNavmapCoord(const glm::vec3& objectPosition, const glm::vec2& mapPosition, const float mapScale) const
     {
-        return glm::ivec2(static_cast<int>(((objectPosition.x - (mapPosition.x * mapScale))/mapScale + 0.5f) * mNavmapSize), static_cast<int>((1.0f - ((objectPosition.y - (mapPosition.y * mapScale))/mapScale + 0.5f)) * mNavmapSize));
+        return glm::ivec2(static_cast<int>(((objectPosition.x - (mapPosition.x * mapScale))/mapScale + 0.5f) * mNavmapSize),
+                          static_cast<int>((1.0f - ((objectPosition.y - (mapPosition.y * mapScale))/mapScale + 0.5f)) * mNavmapSize));
     }
     
     inline NavmapTileType GetNavmapTileAt(const glm::ivec2& navmapCoord) const
@@ -73,6 +81,8 @@ public:
         
         return NavmapTileType::SOLID;
     }
+    
+    inline int GetSize() const { return mNavmapSize; }
     
 private:
     const unsigned char* mNavmapPixels;
