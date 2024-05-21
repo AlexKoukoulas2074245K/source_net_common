@@ -26,13 +26,14 @@ namespace networking
 
 enum class MessageType
 {
-    UNKNOWN_MESSAGE                 = 0,
-    CS_PLAYER_STATE                 = 1,
-    SC_PLAYER_STATE_RESPONSE        = 2,
-    CS_REQUEST_LOGIN                = 3,
-    SC_REQUEST_LOGIN_RESPONSE       = 4,
-    CS_THROW_RANGED_WEAPON          = 5,
-    SC_THROW_RANGED_WEAPON_RESPONSE = 6
+    UNKNOWN_MESSAGE = 0,
+    CS_PLAYER_STATE,
+    SC_PLAYER_STATE_RESPONSE,
+    CS_REQUEST_LOGIN,
+    SC_REQUEST_LOGIN_RESPONSE,
+    CS_THROW_RANGED_WEAPON,
+    SC_THROW_RANGED_WEAPON_RESPONSE,
+    CS_SET_PATHFINDING_DEBUG_MODE
 };
 
 ///-----------------------------------------------------------------------------------------------

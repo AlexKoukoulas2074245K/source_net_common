@@ -52,3 +52,9 @@ VALUE(bool, allowed)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
+
+BEGIN_SERIALIZABLE(SetPathfindingDebugModeRequest)
+VALUE(bool, enabled)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
