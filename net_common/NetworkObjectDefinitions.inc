@@ -19,3 +19,18 @@ VALUE(bool, allowed)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
+
+BEGIN_SERIALIZABLE(WordRequest)
+VALUE(std::string, sourceLanguge)
+VALUE(std::string, targetLanguage)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
+
+BEGIN_SERIALIZABLE(WordResponse)
+VALUE(std::string, sourceWord)
+VALUE(std::vector<std::string>, choices)
+VALUE(bool, allowed)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
