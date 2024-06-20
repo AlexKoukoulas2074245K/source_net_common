@@ -1,26 +1,9 @@
 ///------------------------------------------------------------------------------------------------
-///  NetObjects.h
+///  NetworkObjectDefinitions.inc
 ///  TinyMMOCommon
 ///                                                                                                
 ///  Created by Alex Koukoulas on 30/04/2024
 ///------------------------------------------------------------------------------------------------
-
-///------------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(WorldObjectData)
-VALUE(long long, objectId)
-VALUE(long long, parentObjectId)
-VALUE(strutils::StringId, objectName)
-VALUE(strutils::StringId, objectCurrentMapName)
-VALUE(glm::vec3, objectCampPosition)
-VALUE(glm::vec3, objectPosition)
-VALUE(glm::vec3, objectVelocity)
-VALUE(float, color)
-VALUE(int, objectType)
-VALUE(int, objectState)
-VALUE(bool, isLocal)
-VALUE(bool, invalidated)
-END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
 
@@ -32,29 +15,7 @@ END_SERIALIZABLE()
 BEGIN_SERIALIZABLE(LoginResponse)
 VALUE(long long, playerId)
 VALUE(strutils::StringId, playerName)
-VALUE(strutils::StringId, playerCurrentMapName)
-VALUE(glm::vec3, playerPosition)
-VALUE(float, color)
 VALUE(bool, allowed)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(ThrowRangedWeaponRequest)
-VALUE(long long, playerId)
-VALUE(glm::vec3, targetPosition)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(ThrowRangedWeaponResponse)
-VALUE(bool, allowed)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(SetPathfindingDebugModeRequest)
-VALUE(bool, enabled)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------

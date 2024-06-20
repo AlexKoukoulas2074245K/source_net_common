@@ -35,13 +35,8 @@ enum class MessagePriority
 enum class MessageType
 {
     UNKNOWN_MESSAGE = 0,
-    CS_PLAYER_STATE,
-    SC_PLAYER_STATE_RESPONSE,
     CS_REQUEST_LOGIN,
     SC_REQUEST_LOGIN_RESPONSE,
-    CS_THROW_RANGED_WEAPON,
-    SC_THROW_RANGED_WEAPON_RESPONSE,
-    CS_SET_PATHFINDING_DEBUG_MODE
 };
 
 ///-----------------------------------------------------------------------------------------------
