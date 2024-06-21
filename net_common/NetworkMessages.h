@@ -38,7 +38,9 @@ enum class MessageType
     CS_LOGIN_REQUEST,
     SC_LOGIN_RESPONSE,
     CS_WORD_REQUEST,
-    SC_WORD_RESPONSE
+    SC_WORD_RESPONSE,
+    CS_GET_SUPPORTED_LANGUAGES_REQUEST,
+    SC_GET_SUPPORTED_LANGUAGES_RESPONSE
 };
 
 ///-----------------------------------------------------------------------------------------------

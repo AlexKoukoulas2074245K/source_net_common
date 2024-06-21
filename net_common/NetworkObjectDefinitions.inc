@@ -34,3 +34,14 @@ VALUE(bool, allowed)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
+
+BEGIN_SERIALIZABLE(GetSupportedLanguagesRequest)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
+
+BEGIN_SERIALIZABLE(GetSupportedLanguagesResponse)
+VALUE(std::vector<std::string>, supportedLanguages)
+END_SERIALIZABLE()
+
+///-----------------------------------------------------------------------------------------------
