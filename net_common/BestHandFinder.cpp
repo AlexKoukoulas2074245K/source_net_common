@@ -8,7 +8,9 @@
 #include "BestHandFinder.h"
 
 #include <algorithm>
+#include <optional>
 #include <vector>
+
 ///------------------------------------------------------------------------------------------------
 
 namespace poker
