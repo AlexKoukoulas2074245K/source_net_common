@@ -1,11 +1,16 @@
 ///------------------------------------------------------------------------------------------------
-///  Card.cpp
+///  BestHandFinder.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 6/11/2024
+///  Created by Alex Koukoulas on 7/11/2024
 ///------------------------------------------------------------------------------------------------
 
-#include "Card.h"
+#ifndef BestHandFinder_h
+#define BestHandFinder_h
+
+///------------------------------------------------------------------------------------------------
+
+#include "Hand.h"
 
 ///------------------------------------------------------------------------------------------------
 
@@ -14,18 +19,17 @@ namespace poker
 
 ///------------------------------------------------------------------------------------------------
 
-std::string Card::ToString() const noexcept
+inline constexpr int CARD_POOL_SIZE = 7;
+
+///------------------------------------------------------------------------------------------------
+
+class BestHandFinder final
 {
-    const auto& cardSuit = std::string(1, static_cast<char>(mCardSuit));
+public:
+    static Hand FindBestHand(const std::array<Card, CARD_POOL_SIZE>& cardPool);
     
-    switch (mCardRank)
-    {
-        case CardRank::JACK: return "J" + cardSuit;
-        case CardRank::QUEEN: return "Q" + cardSuit;
-        case CardRank::KING: return "K" + cardSuit;
-        case CardRank::ACE: return "A" + cardSuit;
-        default: return std::to_string(GetRankValue()) + cardSuit;
-    }
+private:
+    BestHandFinder() = delete;
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -33,4 +37,6 @@ std::string Card::ToString() const noexcept
 }
 
 ///------------------------------------------------------------------------------------------------
+
+#endif /* BestHandFinder_h */
 

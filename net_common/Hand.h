@@ -1,12 +1,12 @@
 ///------------------------------------------------------------------------------------------------
-///  Card.h
+///  Hand.h
 ///  TinyMMOCommon
 ///                                                                                                
 ///  Created by Alex Koukoulas on 6/11/2024
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Card_h
-#define Card_h
+#ifndef Hand_h
+#define Hand_h
 
 ///------------------------------------------------------------------------------------------------
 
@@ -15,6 +15,9 @@
 #else
 #include "../util/StringUtils.h"
 #endif
+#include "Card.h"
+
+#include <array>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -23,74 +26,50 @@ namespace poker
 
 ///------------------------------------------------------------------------------------------------
 
-enum class CardRank
+inline constexpr int HAND_SIZE = 5;
+
+///------------------------------------------------------------------------------------------------
+
+enum class HandKind
 {
-    TWO = 2,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE,
-    TEN,
-    JACK,
-    QUEEN,
-    KING,
-    ACE = 14
+    HIGH_CARD = 0,
+    ONE_PAIR,
+    TWO_PAIR,
+    THREE_OF_A_KIND,
+    STRAIGHT,
+    FLUSH,
+    FULL_HOUSE,
+    FOUR_OF_A_KIND,
+    STRAIGHT_FLUSH,
+    ROYAL_FLUSH
 };
 
 ///------------------------------------------------------------------------------------------------
 
-enum class CardSuit
-{
-    SPADE = 'S',
-    HEART = 'H',
-    DIAMOND = 'D',
-    CLUB = 'C'
-};
-
-///------------------------------------------------------------------------------------------------
-
-class Card final
+class Hand final
 {
 public:
-    Card(const CardRank cardRank, const CardSuit cardSuit) noexcept
-    : mCardRank(cardRank)
-    , mCardSuit(cardSuit)
-    {}
-    
-    std::string ToString() const noexcept;
-    
-    inline CardRank GetRank() const noexcept { return mCardRank; }
-    inline CardSuit GetSuit() const noexcept { return mCardSuit; }
-    inline int GetRankValue() const noexcept { return static_cast<int>(mCardRank); }
+    Hand(const std::array<Card, HAND_SIZE>& handCards, const HandKind handKind)
+        : mHandCards(handCards)
+        , mHandKind(handKind)
+    {
+    }
+
+    inline const std::array<Card, HAND_SIZE>& GetHandCards() const { return mHandCards; }
+    inline const HandKind GetHandKind() const { return mHandKind; }
+    inline int GetHandKindValue() const { return static_cast<int>(mHandKind); }
     
 private:
-    CardRank mCardRank;
-    CardSuit mCardSuit;
+    const std::array<Card, HAND_SIZE> mHandCards;
+    const HandKind mHandKind;
 };
 
 ///------------------------------------------------------------------------------------------------
-inline bool operator == (const Card& lhs, const Card& rhs) noexcept
-{
-    return lhs.GetRank() == rhs.GetRank() && lhs.GetSuit() == rhs.GetSuit();
-}
-
-inline bool operator != (const Card& lhs, const Card& rhs) noexcept
-{
-    return !(lhs == rhs);
-}
-
-inline bool operator < (const Card& lhs, const Card& rhs) noexcept
-{
-    return lhs.GetRank() < rhs.GetRank();
-}
-
-inline bool operator > (const Card& lhs, const Card& rhs) noexcept
-{
-    return lhs.GetRank() > rhs.GetRank();
-}
+// All operators here test explicitly for hand strength, not sameness of card ranks & suits
+bool operator < (const Hand& lhs, const Hand& rhs);
+bool operator > (const Hand& lhs, const Hand& rhs);
+bool operator == (const Hand& lhs, const Hand& rhs);
+bool operator != (const Hand& lhs, const Hand& rhs);
 
 ///------------------------------------------------------------------------------------------------
 
@@ -98,5 +77,5 @@ inline bool operator > (const Card& lhs, const Card& rhs) noexcept
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Card_h */
+#endif /* Hand_h */
 
