@@ -45,6 +45,7 @@ inline std::string toString(const int i) { return std::to_string(i); }
 inline std::string toString(const long long l) { return std::to_string(l); }
 inline std::string toString(const glm::vec3& v) { return "{\"x\": " + std::to_string(v.x) + ", \"y\": " + std::to_string(v.y) + ", \"z\": " + std::to_string(v.z) + "}"; }
 inline std::string toString(const std::vector<std::string>& v) { return strutils::VecToString(v); }
+inline std::string toString(const std::vector<long long>& v) { return strutils::VecToString(v); }
 
 inline void addToJson(nlohmann::json& json, const std::string& fieldName, const strutils::StringId& s) { json[fieldName] = s.GetString(); }
 inline void addToJson(nlohmann::json& json, const std::string& fieldName, const std::string& s) { json[fieldName] = s; }
@@ -54,6 +55,7 @@ inline void addToJson(nlohmann::json& json, const std::string& fieldName, const 
 inline void addToJson(nlohmann::json& json, const std::string& fieldName, const long long l) { json[fieldName] = l; }
 inline void addToJson(nlohmann::json& json, const std::string& fieldName, const glm::vec3& v) { json[fieldName]["x"] = v.x; json[fieldName]["y"] = v.y; json[fieldName]["z"] = v.z; }
 inline void addToJson(nlohmann::json& json, const std::string& fieldName, const std::vector<std::string>& v) { json[fieldName] = v; }
+inline void addToJson(nlohmann::json& json, const std::string& fieldName, const std::vector<long long>& v) { json[fieldName] = v; }
 
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, strutils::StringId& fieldValue) { fieldValue = strutils::StringId(json[fieldName].get<std::string>()); }
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, std::string& fieldValue) { fieldValue = json[fieldName].get<std::string>(); }
@@ -63,6 +65,7 @@ inline void parseValue(const nlohmann::json& json, const std::string& fieldName,
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, long long& fieldValue) { fieldValue = json[fieldName].get<long long>(); }
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, glm::vec3& fieldValue) { if (json[fieldName].count("x") && json[fieldName].count("y") && json[fieldName].count("z")) fieldValue = glm::vec3(json[fieldName]["x"].get<float>(), json[fieldName]["y"].get<float>(), json[fieldName]["z"].get<float>()); }
 inline void parseValue(const nlohmann::json& json, const std::string& fieldName, std::vector<std::string>& fieldValue) { fieldValue = json[fieldName].get<std::vector<std::string>>(); }
+inline void parseValue(const nlohmann::json& json, const std::string& fieldName, std::vector<long long>& fieldValue) { fieldValue = json[fieldName].get<std::vector<long long>>(); }
 
 // Construct class outline
 #define BEGIN_SERIALIZABLE(className) struct className { \

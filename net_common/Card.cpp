@@ -14,6 +14,21 @@ namespace poker
 
 ///------------------------------------------------------------------------------------------------
 
+Card::Card(const std::string& cardString)
+{
+    mCardSuit = static_cast<CardSuit>(cardString.back());
+    switch (cardString[0])
+    {
+        case 'J': mCardRank = poker::CardRank::JACK; break;
+        case 'Q': mCardRank = poker::CardRank::QUEEN; break;
+        case 'K': mCardRank = poker::CardRank::KING; break;
+        case 'A': mCardRank = poker::CardRank::ACE; break;
+        case '1': mCardRank = poker::CardRank::TEN; break;
+    }
+}
+
+///------------------------------------------------------------------------------------------------
+
 std::string Card::ToString() const noexcept
 {
     const auto& cardSuit = std::string(1, static_cast<char>(mCardSuit));

@@ -37,6 +37,8 @@ enum class MessageType
     UNKNOWN_MESSAGE = 0,
     CS_PLAY_REQUEST,
     SC_PLAY_RESPONSE,
+    CS_TABLE_STATE_REQUEST,
+    SC_TABLE_STATE_RESPONSE
 };
 
 ///-----------------------------------------------------------------------------------------------

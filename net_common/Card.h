@@ -60,6 +60,8 @@ public:
     , mCardSuit(cardSuit)
     {}
     
+    Card(const std::string& cardString);
+    
     std::string ToString() const noexcept;
     
     inline CardRank GetRank() const noexcept { return mCardRank; }
