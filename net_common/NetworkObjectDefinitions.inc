@@ -7,41 +7,15 @@
 
 ///-----------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(LoginRequest)
+BEGIN_SERIALIZABLE(PlayRequest)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(LoginResponse)
+BEGIN_SERIALIZABLE(PlayResponse)
 VALUE(long long, playerId)
-VALUE(strutils::StringId, playerName)
+VALUE(long long, tableId)
 VALUE(bool, allowed)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(WordRequest)
-VALUE(std::string, sourceLanguge)
-VALUE(std::string, targetLanguage)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(WordResponse)
-VALUE(std::string, sourceWord)
-VALUE(std::vector<std::string>, choices)
-VALUE(bool, allowed)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(GetSupportedLanguagesRequest)
-END_SERIALIZABLE()
-
-///-----------------------------------------------------------------------------------------------
-
-BEGIN_SERIALIZABLE(GetSupportedLanguagesResponse)
-VALUE(std::vector<std::string>, supportedLanguages)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
