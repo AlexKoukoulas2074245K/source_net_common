@@ -16,6 +16,26 @@ namespace poker
 
 ///------------------------------------------------------------------------------------------------
 
+std::string GetHandKindString(const HandKind handKind)
+{
+    switch (handKind)
+    {
+        case HandKind::HIGH_CARD: return "High card";
+        case HandKind::ONE_PAIR: return "One pair";
+        case HandKind::TWO_PAIR: return "Two pair";
+        case HandKind::THREE_OF_A_KIND: return "Three of a kind";
+        case HandKind::STRAIGHT: return "Straight";
+        case HandKind::FLUSH: return "Flush";
+        case HandKind::FULL_HOUSE: return "Full House";
+        case HandKind::FOUR_OF_A_KIND: return "Four of a kind";
+        case HandKind::STRAIGHT_FLUSH: return "Straight Flush";
+        case HandKind::ROYAL_FLUSH: return "Royal Flush";
+    }
+    return "";
+}
+
+///------------------------------------------------------------------------------------------------
+
 template<class Comparator>
 static bool DescendingHandComparison(const std::array<Card, HAND_SIZE>& lhsSortedHand, const std::array<Card, HAND_SIZE>& rhsSortedHand, Comparator comp)
 {

@@ -45,6 +45,8 @@ enum class HandKind
     ROYAL_FLUSH
 };
 
+std::string GetHandKindString(const HandKind handKind);
+
 ///------------------------------------------------------------------------------------------------
 
 class Hand final

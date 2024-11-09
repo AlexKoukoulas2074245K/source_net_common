@@ -24,6 +24,7 @@ Card::Card(const std::string& cardString)
         case 'K': mCardRank = poker::CardRank::KING; break;
         case 'A': mCardRank = poker::CardRank::ACE; break;
         case '1': mCardRank = poker::CardRank::TEN; break;
+        default: mCardRank = static_cast<CardRank>(std::stoi(std::string(1, cardString[0]))); break;
     }
 }
 
