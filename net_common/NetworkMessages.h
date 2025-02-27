@@ -35,10 +35,10 @@ enum class MessagePriority
 enum class MessageType
 {
     UNKNOWN_MESSAGE = 0,
-    CS_PLAY_REQUEST,
-    SC_PLAY_RESPONSE,
-    CS_TABLE_STATE_REQUEST,
-    SC_TABLE_STATE_RESPONSE
+    CS_LOGIN_REQUEST,
+    SC_LOGIN_RESPONSE,
+    CS_SPIN_REQUEST,
+    SC_SPIN_RESPONSE
 };
 
 ///-----------------------------------------------------------------------------------------------

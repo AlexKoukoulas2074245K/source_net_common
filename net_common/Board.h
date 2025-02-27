@@ -1,36 +1,26 @@
 ///------------------------------------------------------------------------------------------------
-///  BestHandFinder.h
+///  Board.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 7/11/2024
+///  Created by Alex Koukoulas on 27/02/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef BestHandFinder_h
-#define BestHandFinder_h
-
-///------------------------------------------------------------------------------------------------
-
-#include "Hand.h"
+#ifndef Board_h
+#define Board_h
 
 ///------------------------------------------------------------------------------------------------
 
-namespace poker
+#if __has_include(<engine/utils/StringUtils.h>)
+#include <engine/utils/StringUtils.h>
+#else
+#include "../util/StringUtils.h"
+#endif
+
+///------------------------------------------------------------------------------------------------
+
+namespace slots
 {
 
-///------------------------------------------------------------------------------------------------
-
-inline constexpr int CARD_POOL_SIZE = 7;
-
-///------------------------------------------------------------------------------------------------
-
-class BestHandFinder final
-{
-public:
-    static Hand FindBestHand(const std::array<Card, CARD_POOL_SIZE>& cardPool);
-    
-private:
-    BestHandFinder() = delete;
-};
 
 ///------------------------------------------------------------------------------------------------
 
@@ -38,5 +28,5 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* BestHandFinder_h */
+#endif /* Board_h */
 

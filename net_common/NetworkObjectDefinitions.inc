@@ -7,31 +7,26 @@
 
 ///-----------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(PlayRequest)
+BEGIN_SERIALIZABLE(LoginRequest)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(PlayResponse)
+BEGIN_SERIALIZABLE(LoginResponse)
 VALUE(long long, playerId)
-VALUE(long long, tableId)
 VALUE(bool, allowed)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(TableStateRequest)
+BEGIN_SERIALIZABLE(SpinRequest)
 VALUE(long long, playerId)
-VALUE(long long, tableId)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
 
-BEGIN_SERIALIZABLE(TableStateResponse)
-VALUE(std::string, roundStateName)
-VALUE(std::string, communityCards)
-VALUE(std::vector<long long>, holeCardPlayerIds)
-VALUE(std::vector<std::string>, holeCards)
+BEGIN_SERIALIZABLE(SpinResponse)
+VALUE(long long, spinId)
 END_SERIALIZABLE()
 
 ///-----------------------------------------------------------------------------------------------
