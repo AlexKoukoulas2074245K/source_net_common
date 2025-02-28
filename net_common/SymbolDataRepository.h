@@ -1,16 +1,18 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  SymbolDataRepository.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
+///  Created by Alex Koukoulas on 28/02/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Board_h
-#define Board_h
+#ifndef SymbolDataRepository_h
+#define SymbolDataRepository_h
 
 ///------------------------------------------------------------------------------------------------
 
 #include "Symbols.h"
+#include <vector>
+#include <unordered_map>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -19,21 +21,25 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
-inline constexpr int BOARD_ROWS = 3;
-
-///------------------------------------------------------------------------------------------------
-
-class Board
+class SymbolDataRepository final
 {
 public:
-    Board() = default;
+    static SymbolDataRepository& GetInstance();
+    ~SymbolDataRepository() = default;
     
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col);
-
+    SymbolDataRepository(const SymbolDataRepository&) = delete;
+    SymbolDataRepository(SymbolDataRepository&&) = delete;
+    const SymbolDataRepository& operator = (const SymbolDataRepository&) = delete;
+    SymbolDataRepository& operator = (SymbolDataRepository&&) = delete;
+    
+    float GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const;
 private:
-    SymbolType mBoardSymbols[BOARD_ROWS][BOARD_COLS];
+    SymbolDataRepository();
+    
+    void InitWithDefaultConfig();
+    
+private:
+    std::vector<std::unordered_map<SymbolType, float>> mSymbolWinMultipliers;
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -42,5 +48,5 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
+#endif /* SymbolDataRepository_h */
 

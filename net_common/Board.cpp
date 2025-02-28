@@ -1,16 +1,12 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  Board.cpp
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
+///  Created by Alex Koukoulas on 28/02/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Board_h
-#define Board_h
-
-///------------------------------------------------------------------------------------------------
-
-#include "Symbols.h"
+#include "Board.h"
+#include <cassert>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -19,22 +15,19 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
-inline constexpr int BOARD_ROWS = 3;
+void Board::SetBoardSymbol(const int row, const int col, const SymbolType symbol)
+{
+    assert(row < BOARD_ROWS && col < BOARD_COLS);
+    mBoardSymbols[row][col] = symbol;
+}
 
 ///------------------------------------------------------------------------------------------------
 
-class Board
+SymbolType Board::GetBoardSymbol(const int row, const int col)
 {
-public:
-    Board() = default;
-    
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col);
-
-private:
-    SymbolType mBoardSymbols[BOARD_ROWS][BOARD_COLS];
-};
+    assert(row < BOARD_ROWS && col < BOARD_COLS);
+    return mBoardSymbols[row][col];
+}
 
 ///------------------------------------------------------------------------------------------------
 
@@ -42,5 +35,4 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
 

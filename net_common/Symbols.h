@@ -1,16 +1,12 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  Symbols.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
+///  Created by Alex Koukoulas on 28/02/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Board_h
-#define Board_h
-
-///------------------------------------------------------------------------------------------------
-
-#include "Symbols.h"
+#ifndef Symbols_h
+#define Symbols_h
 
 ///------------------------------------------------------------------------------------------------
 
@@ -19,21 +15,23 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
-inline constexpr int BOARD_ROWS = 3;
-
-///------------------------------------------------------------------------------------------------
-
-class Board
+enum class SymbolType
 {
-public:
-    Board() = default;
-    
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col);
-
-private:
-    SymbolType mBoardSymbols[BOARD_ROWS][BOARD_COLS];
+    BUTTER          = 0,
+    CAMP_FIRE       = 1,
+    CHICKEN         = 2,
+    CHOCOLATE       = 3,
+    COOKING_OIL     = 4,
+    EGGS            = 5,
+    FLOUR           = 6,
+    GARLICS         = 7,
+    LEMONS          = 8,
+    STRAWBERRIES    = 9,
+    SUGAR           = 10,
+    CHOCOLATE_CAKE  = 11,
+    STRAWBERRY_CAKE = 12,
+    ROAST_CHICKEN   = 13,
+    WILD            = 14
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -42,5 +40,5 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
+#endif /* Symbols_h */
 
