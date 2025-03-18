@@ -16,6 +16,12 @@
 #include "../util/MathUtils.h"
 #endif
 
+#if __has_include(<nlohmann/json.hpp>)
+#include <nlohmann/json.hpp>
+#else
+#include "../util/Json.h"
+#endif
+
 #include <string>
 
 ///------------------------------------------------------------------------------------------------
