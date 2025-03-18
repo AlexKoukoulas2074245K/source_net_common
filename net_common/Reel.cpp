@@ -1,16 +1,12 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  Reel.cpp
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
-///------------------------------------------------------------------------------------------------
-
-#ifndef Board_h
-#define Board_h
-
+///  Created by Alex Koukoulas on 13/03/2025
 ///------------------------------------------------------------------------------------------------
 
 #include "Reel.h"
+#include <cassert>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -19,23 +15,35 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
+Reel::Reel()
+{
+    mReelSymbols.resize(REEL_LENGTH);
+}
 
 ///------------------------------------------------------------------------------------------------
 
-class Board
+void Reel::AddNewReelSymbol(const SymbolType symbol)
 {
-public:
-    Board() = default;
-    
-    void PopulateBoard(const int spinId);
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col) const;
+    mReelSymbols.insert(mReelSymbols.begin(), symbol);
+    mReelSymbols.pop_back();
+    assert(mReelSymbols.size() == REEL_LENGTH);
+}
 
-private:
-    Reel mBoardReels[BOARD_COLS];
-    int mCurrentRandomSeed;
-};
+///------------------------------------------------------------------------------------------------
+
+void Reel::SetReelSymbol(const int index, const SymbolType symbol)
+{
+    assert(index < REEL_LENGTH);
+    mReelSymbols[index] = symbol;
+}
+
+///------------------------------------------------------------------------------------------------
+
+SymbolType Reel::GetReelSymbol(const int index) const
+{
+    assert(index < REEL_LENGTH);
+    return mReelSymbols[index];
+}
 
 ///------------------------------------------------------------------------------------------------
 
@@ -43,5 +51,4 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
 

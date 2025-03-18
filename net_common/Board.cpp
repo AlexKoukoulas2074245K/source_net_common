@@ -8,6 +8,12 @@
 #include "Board.h"
 #include <cassert>
 
+#if __has_include(<engine/utils/MathUtils.h>)
+#include <engine/utils/MathUtils.h>
+#else
+#include "../util/MathUtils.h"
+#endif
+
 ///------------------------------------------------------------------------------------------------
 
 namespace slots
@@ -15,18 +21,44 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-void Board::SetBoardSymbol(const int row, const int col, const SymbolType symbol)
+void Board::PopulateBoard(const int spinId)
 {
-    assert(row < BOARD_ROWS && col < BOARD_COLS);
-    mBoardSymbols[row][col] = symbol;
+    mCurrentRandomSeed = spinId;
+    math::SetControlSeed(mCurrentRandomSeed);
+    
+    for (int row = 0; row < REEL_LENGTH; ++row)
+    {
+        for (int col = 0; col < BOARD_COLS; ++col)
+        {
+            auto symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            while (symbolType == SymbolType::CHOCOLATE_CAKE ||
+                   symbolType == SymbolType::STRAWBERRY_CAKE ||
+                   symbolType == SymbolType::ROAST_CHICKEN)
+            {
+                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            }
+            
+            SetBoardSymbol(row, col, symbolType);
+        }
+    }
+    
+    mCurrentRandomSeed = math::GetControlSeed();
 }
 
 ///------------------------------------------------------------------------------------------------
 
-SymbolType Board::GetBoardSymbol(const int row, const int col)
+void Board::SetBoardSymbol(const int row, const int col, const SymbolType symbol)
 {
-    assert(row < BOARD_ROWS && col < BOARD_COLS);
-    return mBoardSymbols[row][col];
+    assert(row < slots::REEL_LENGTH && col < BOARD_COLS);
+    mBoardReels[col].SetReelSymbol(row, symbol);
+}
+
+///------------------------------------------------------------------------------------------------
+
+SymbolType Board::GetBoardSymbol(const int row, const int col) const
+{
+    assert(row < slots::REEL_LENGTH && col < BOARD_COLS);
+    return mBoardReels[col].GetReelSymbol(row);
 }
 
 ///------------------------------------------------------------------------------------------------

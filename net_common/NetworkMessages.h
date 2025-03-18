@@ -10,11 +10,12 @@
 
 ///------------------------------------------------------------------------------------------------
 
-#if __has_include(<nlohmann/json.hpp>)
-#include <nlohmann/json.hpp>
+#if __has_include(<engine/utils/MathUtils.h>)
+#include <engine/utils/MathUtils.h>
 #else
-#include "../util/Json.h"
+#include "../util/MathUtils.h"
 #endif
+
 #include <string>
 
 ///------------------------------------------------------------------------------------------------

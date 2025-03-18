@@ -31,7 +31,8 @@ enum class SymbolType
     CHOCOLATE_CAKE  = 11,
     STRAWBERRY_CAKE = 12,
     ROAST_CHICKEN   = 13,
-    WILD            = 14
+    WILD            = 14,
+    COUNT           = 15
 };
 
 ///------------------------------------------------------------------------------------------------

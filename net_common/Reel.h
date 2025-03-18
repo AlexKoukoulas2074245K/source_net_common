@@ -1,16 +1,18 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  Reel.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
+///  Created by Alex Koukoulas on 13/03/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Board_h
-#define Board_h
+#ifndef Reel_h
+#define Reel_h
 
 ///------------------------------------------------------------------------------------------------
 
-#include "Reel.h"
+#include "Symbols.h"
+
+#include <vector>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -19,22 +21,21 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
+inline constexpr int REEL_LENGTH = 9;
 
 ///------------------------------------------------------------------------------------------------
 
-class Board
+class Reel
 {
 public:
-    Board() = default;
+    Reel();
     
-    void PopulateBoard(const int spinId);
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col) const;
+    void AddNewReelSymbol(const SymbolType symbol);
+    void SetReelSymbol(const int index, const SymbolType symbol);
+    SymbolType GetReelSymbol(const int index) const;
 
 private:
-    Reel mBoardReels[BOARD_COLS];
-    int mCurrentRandomSeed;
+    std::vector<SymbolType> mReelSymbols;
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -43,5 +44,5 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
+#endif /* Reel_h */
 
