@@ -21,6 +21,17 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
+Board::Board()
+{
+    mBoardReels[0].SetReelSymbol(3, SymbolType::WILD);
+    mBoardReels[1].SetReelSymbol(4, SymbolType::WILD);
+    mBoardReels[2].SetReelSymbol(5, SymbolType::WILD);
+    mBoardReels[3].SetReelSymbol(4, SymbolType::WILD);
+    mBoardReels[4].SetReelSymbol(3, SymbolType::WILD);
+}
+
+///------------------------------------------------------------------------------------------------
+
 void Board::PopulateBoard(const int spinId)
 {
     mCurrentRandomSeed = spinId;

@@ -26,7 +26,7 @@ inline constexpr int BOARD_COLS = 5;
 class Board
 {
 public:
-    Board() = default;
+    Board();
     
     void PopulateBoard(const int spinId);
     void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
