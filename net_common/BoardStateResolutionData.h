@@ -1,18 +1,18 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  BoardStateResolutionData.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
+///  Created by Alex Koukoulas on 20/03/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Board_h
-#define Board_h
+#ifndef BoardStateResolutionData_h
+#define BoardStateResolutionData_h
 
 ///------------------------------------------------------------------------------------------------
 
-#include "Reel.h"
 #include "Paylines.h"
-#include "BoardStateResolutionData.h"
+
+#include <vector>
 
 ///------------------------------------------------------------------------------------------------
 
@@ -21,29 +21,28 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
+struct SymbolEntryData
+{
+    SymbolType mSymbolType;
+    int mCol = 0;
+    int mRow = 0;
+};
 
 ///------------------------------------------------------------------------------------------------
 
-class Board
+struct PaylineResolutionData
 {
-public:
-    Board();
-    
-    const BoardStateResolutionData& ResolveBoardState();
-    PaylineResolutionData ResolvePayline(const PaylineType payline);
+    PaylineType mPayline;
+    std::vector<SymbolEntryData> mSymbolData;
+    float mWinMultiplier = 0.0f;
+};
 
-    void PopulateBoardForSpin(const int spinId);
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col) const;
+///------------------------------------------------------------------------------------------------
 
-private:
-    void RandomControlledBoardPopulation();
-
-private:
-    Reel mBoardReels[BOARD_COLS];
-    BoardStateResolutionData mCurrentResolutionData;
-    int mCurrentRandomSeed;
+struct BoardStateResolutionData
+{
+    std::vector<PaylineResolutionData> mWinningReels;
+    bool mTumbled = false;
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -52,5 +51,5 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
+#endif /* BoardStateResolutionData_h */
 

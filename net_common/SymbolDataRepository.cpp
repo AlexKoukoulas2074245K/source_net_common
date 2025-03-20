@@ -59,7 +59,7 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers[2][SymbolType::CHOCOLATE_CAKE]  = 10.0f;
     mSymbolWinMultipliers[2][SymbolType::STRAWBERRY_CAKE] = 10.0f;
     mSymbolWinMultipliers[2][SymbolType::ROAST_CHICKEN]   = 7.5f;
-    mSymbolWinMultipliers[2][SymbolType::WILD]            = 1.0f;
+    mSymbolWinMultipliers[2][SymbolType::SCATTER]         = 1.0f;
 
     // 4x matches
     mSymbolWinMultipliers[3][SymbolType::BUTTER]          = 1.5f;
@@ -76,7 +76,7 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers[3][SymbolType::CHOCOLATE_CAKE]  = 30.0f;
     mSymbolWinMultipliers[3][SymbolType::STRAWBERRY_CAKE] = 30.0f;
     mSymbolWinMultipliers[3][SymbolType::ROAST_CHICKEN]   = 21.5f;
-    mSymbolWinMultipliers[3][SymbolType::WILD]            = 3.0f;
+    mSymbolWinMultipliers[3][SymbolType::SCATTER]         = 3.0f;
     
     // 5x matches
     mSymbolWinMultipliers[4][SymbolType::BUTTER]          = 4.5f;
@@ -93,7 +93,7 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers[4][SymbolType::CHOCOLATE_CAKE]  = 90.0f;
     mSymbolWinMultipliers[4][SymbolType::STRAWBERRY_CAKE] = 90.0f;
     mSymbolWinMultipliers[4][SymbolType::ROAST_CHICKEN]   = 60.0f;
-    mSymbolWinMultipliers[4][SymbolType::WILD]            = 9.0f;
+    mSymbolWinMultipliers[4][SymbolType::SCATTER]         = 9.0f;
 }
 
 ///------------------------------------------------------------------------------------------------

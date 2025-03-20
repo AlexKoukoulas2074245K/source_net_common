@@ -32,7 +32,8 @@ enum class SymbolType
     STRAWBERRY_CAKE = 12,
     ROAST_CHICKEN   = 13,
     WILD            = 14,
-    COUNT           = 15
+    SCATTER         = 15,
+    COUNT           = 16
 };
 
 ///------------------------------------------------------------------------------------------------
