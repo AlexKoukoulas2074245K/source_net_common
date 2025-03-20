@@ -1,17 +1,12 @@
 ///------------------------------------------------------------------------------------------------
-///  Board.h
+///  Paylines.h
 ///  TinyMMOCommon
 ///                                                                                                
-///  Created by Alex Koukoulas on 27/02/2025
+///  Created by Alex Koukoulas on 20/03/2025
 ///------------------------------------------------------------------------------------------------
 
-#ifndef Board_h
-#define Board_h
-
-///------------------------------------------------------------------------------------------------
-
-#include "Reel.h"
-#include "Paylines.h"
+#ifndef Paylines_h
+#define Paylines_h
 
 ///------------------------------------------------------------------------------------------------
 
@@ -20,22 +15,24 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-inline constexpr int BOARD_COLS = 5;
-
-///------------------------------------------------------------------------------------------------
-
-class Board
+enum class PaylineType
 {
-public:
-    Board();
-    
-    void PopulateBoard(const int spinId);
-    void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
-    SymbolType GetBoardSymbol(const int row, const int col) const;
-
-private:
-    Reel mBoardReels[BOARD_COLS];
-    int mCurrentRandomSeed;
+    PAYLINE_1     = 0,
+    PAYLINE_2     = 1,
+    PAYLINE_3     = 2,
+    PAYLINE_4     = 3,
+    PAYLINE_5     = 4,
+    PAYLINE_6     = 5,
+    PAYLINE_7     = 6,
+    PAYLINE_8     = 7,
+    PAYLINE_9     = 8,
+    PAYLINE_10    = 9,
+    PAYLINE_11    = 10,
+    PAYLINE_12    = 11,
+    PAYLINE_13    = 12,
+    PAYLINE_14    = 13,
+    PAYLINE_15    = 14,
+    PAYLINE_COUNT = 15
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -44,5 +41,5 @@ private:
 
 ///------------------------------------------------------------------------------------------------
 
-#endif /* Board_h */
+#endif /* Paylines_h */
 
