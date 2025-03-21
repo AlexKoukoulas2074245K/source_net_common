@@ -32,14 +32,14 @@ public:
     const SymbolDataRepository& operator = (const SymbolDataRepository&) = delete;
     SymbolDataRepository& operator = (SymbolDataRepository&&) = delete;
     
-    float GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const;
+    int GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const;
 private:
     SymbolDataRepository();
     
     void InitWithDefaultConfig();
     
 private:
-    std::vector<std::unordered_map<SymbolType, float>> mSymbolWinMultipliers;
+    std::vector<std::unordered_map<SymbolType, int>> mSymbolWinMultipliers;
 };
 
 ///------------------------------------------------------------------------------------------------

@@ -34,15 +34,17 @@ struct PaylineResolutionData
 {
     PaylineType mPayline;
     std::vector<SymbolEntryData> mSymbolData;
-    float mWinMultiplier = 0.0f;
+    int mWinMultiplier = 0;
+    bool mTumbled = false;
+    bool mFeature = false;
 };
 
 ///------------------------------------------------------------------------------------------------
 
 struct BoardStateResolutionData
 {
-    std::vector<PaylineResolutionData> mWinningReels;
-    bool mTumbled = false;
+    std::vector<PaylineResolutionData> mWinningPaylines;
+    int mTotalWinMultiplier = 0;
 };
 
 ///------------------------------------------------------------------------------------------------

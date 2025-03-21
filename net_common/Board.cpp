@@ -6,6 +6,8 @@
 ///------------------------------------------------------------------------------------------------
 
 #include "Board.h"
+#include "SymbolDataRepository.h"
+
 #include <cassert>
 
 #if __has_include(<engine/utils/MathUtils.h>)
@@ -41,7 +43,11 @@ const BoardStateResolutionData& Board::ResolveBoardState()
     for (int i = 0; i < static_cast<int>(PaylineType::PAYLINE_COUNT); ++i)
     {
         const auto& paylineResolutionData = ResolvePayline(static_cast<PaylineType>(i));
-        (void)paylineResolutionData;
+        if (paylineResolutionData.mWinMultiplier > 0)
+        {
+            mCurrentResolutionData.mTotalWinMultiplier += paylineResolutionData.mWinMultiplier;
+            mCurrentResolutionData.mWinningPaylines.push_back(std::move(paylineResolutionData));
+        }
     }
     
     return mCurrentResolutionData;
@@ -55,13 +61,14 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
     result.mPayline = payline;
     result.mWinMultiplier = 0.0f;
     
+    std::vector<SymbolEntryData> initialSymbolData;
     auto populateSymbolData = [&](const int row, const int col)
     {
         SymbolEntryData symbolEntryData;
         symbolEntryData.mCol = col;
         symbolEntryData.mRow = row;
         symbolEntryData.mSymbolType = mBoardReels[col].GetReelSymbol(row);
-        result.mSymbolData.emplace_back(std::move(symbolEntryData));
+        initialSymbolData.emplace_back(std::move(symbolEntryData));
     };
     
     switch (payline)
@@ -99,7 +106,161 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         default: break;
     }
     
+    auto& symbolDataRepo = SymbolDataRepository::GetInstance();
+
+    auto symbolOccurrenceCount = [&](const SymbolType symbol)
+    {
+        int count = 0;
+        for (int i = 0; i < BOARD_COLS; ++i)
+        {
+            if (initialSymbolData[i].mSymbolType == symbol)
+            {
+                count++;
+            }
+        }
+        return count;
+    };
+
+    int scatterCount = symbolOccurrenceCount(SymbolType::SCATTER);
+    int wildCount = symbolOccurrenceCount(SymbolType::WILD);
+
+    int firstNonSpecialSymbolIndex = -1;
+    for (int i = 0; i < BOARD_COLS; ++i)
+    {
+        if (initialSymbolData[i].mSymbolType != SymbolType::WILD &&
+            initialSymbolData[i].mSymbolType != SymbolType::SCATTER)
+        {
+            firstNonSpecialSymbolIndex = i;
+            break;
+        }
+    }
     
+    // 5 Wilds/5 Scatters
+    if (firstNonSpecialSymbolIndex == -1)
+    {
+        if (scatterCount == 5)
+        {
+            result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::SCATTER, scatterCount);
+            result.mSymbolData = initialSymbolData;
+            result.mFeature = true;
+            return result;
+        }
+        else if (wildCount == 5)
+        {
+            result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::WILD, scatterCount);
+            result.mSymbolData = initialSymbolData;
+            return result;
+        }
+    }
+    
+    // 3+ Scatters
+    if (scatterCount >= 3)
+    {
+        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::SCATTER, scatterCount);
+        result.mSymbolData = initialSymbolData;
+        result.mFeature = true;
+        return result;
+    }
+    
+    // Less than 3 scatters with scatter on 1/2/3 reel is always a non-win
+    if (initialSymbolData[0].mSymbolType == SymbolType::SCATTER ||
+        initialSymbolData[1].mSymbolType == SymbolType::SCATTER ||
+        initialSymbolData[2].mSymbolType == SymbolType::SCATTER)
+    {
+        result.mWinMultiplier = 0;
+        return result;
+    }
+    
+    // Check for tumble/combo
+    if (symbolOccurrenceCount(SymbolType::CHICKEN) == 1 &&
+        symbolOccurrenceCount(SymbolType::COOKING_OIL) == 1 &&
+        symbolOccurrenceCount(SymbolType::GARLICS) == 1 &&
+        symbolOccurrenceCount(SymbolType::CAMP_FIRE) == 1 &&
+        symbolOccurrenceCount(SymbolType::LEMONS) == 1)
+    {
+        // Roast chicken tumble
+        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::ROAST_CHICKEN, 1);
+        result.mSymbolData = initialSymbolData;
+        result.mTumbled = true;
+        return result;
+    }
+    
+    if (symbolOccurrenceCount(SymbolType::BUTTER) == 1 &&
+        symbolOccurrenceCount(SymbolType::CHOCOLATE) == 1 &&
+        symbolOccurrenceCount(SymbolType::EGGS) == 1 &&
+        symbolOccurrenceCount(SymbolType::FLOUR) == 1 &&
+        symbolOccurrenceCount(SymbolType::SUGAR) == 1)
+    {
+        // Chocolate Cake tumble
+        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::CHOCOLATE_CAKE, 1);
+        result.mSymbolData = initialSymbolData;
+        result.mTumbled = true;
+        return result;
+    }
+    
+    if (symbolOccurrenceCount(SymbolType::BUTTER) == 1 &&
+        symbolOccurrenceCount(SymbolType::STRAWBERRIES) == 1 &&
+        symbolOccurrenceCount(SymbolType::EGGS) == 1 &&
+        symbolOccurrenceCount(SymbolType::FLOUR) == 1 &&
+        symbolOccurrenceCount(SymbolType::SUGAR) == 1)
+    {
+        // Strawberry Cake tumble
+        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::STRAWBERRY_CAKE, 1);
+        result.mSymbolData = initialSymbolData;
+        result.mTumbled = true;
+        return result;
+    }
+    
+    
+    // At this point we need to scan up to firstNonSpecialSymbolIndex
+    // and make sure that if it's not == 0, then it needs to be
+    // preceeded only by Wilds to be a win
+    for (int i = 0; i < firstNonSpecialSymbolIndex; ++i)
+    {
+        if (initialSymbolData[i].mSymbolType != SymbolType::WILD)
+        {
+            result.mWinMultiplier = 0;
+            return result;
+        }
+    }
+    
+    // Make sure there is at least a 3+ win now
+    for (int i = firstNonSpecialSymbolIndex + 1; i < 3; ++i)
+    {
+        if (initialSymbolData[i].mSymbolType != SymbolType::WILD && initialSymbolData[i].mSymbolType != initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType)
+        {
+            result.mWinMultiplier = 0;
+            return result;
+        }
+    }
+    result.mSymbolData.push_back(initialSymbolData[0]);
+    result.mSymbolData.push_back(initialSymbolData[1]);
+    result.mSymbolData.push_back(initialSymbolData[2]);
+    
+    // 4+ symbol win
+    if (initialSymbolData[3].mSymbolType == initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType || initialSymbolData[3].mSymbolType == SymbolType::WILD)
+    {
+        result.mSymbolData.push_back(initialSymbolData[3]);
+    }
+    else
+    {
+        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
+        return result;
+    }
+    
+    // 5 symbol win
+    if (initialSymbolData[4].mSymbolType == initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType || initialSymbolData[4].mSymbolType == SymbolType::WILD)
+    {
+        result.mSymbolData.push_back(initialSymbolData[4]);
+    }
+    else
+    {
+        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
+        return result;
+    }
+    
+    result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
+
     return result;
 }
 

@@ -17,7 +17,7 @@ namespace slots
 
 ///------------------------------------------------------------------------------------------------
 
-float SymbolDataRepository::GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const
+int SymbolDataRepository::GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const
 {
     assert(matchingCount < mSymbolWinMultipliers.size());
     return mSymbolWinMultipliers.at(matchingCount).at(symbolType);
@@ -44,56 +44,62 @@ void SymbolDataRepository::InitWithDefaultConfig()
 {
     mSymbolWinMultipliers.resize(BOARD_COLS);
     
+    // 1x matches
+    mSymbolWinMultipliers[0][SymbolType::ROAST_CHICKEN]   = 100;
+    mSymbolWinMultipliers[0][SymbolType::CHOCOLATE_CAKE]  = 90;
+    mSymbolWinMultipliers[0][SymbolType::STRAWBERRY_CAKE] = 90;
+    
     // 3x matches
-    mSymbolWinMultipliers[2][SymbolType::BUTTER]          = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::CAMP_FIRE]       = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::CHICKEN]         = 2.0f;
-    mSymbolWinMultipliers[2][SymbolType::CHOCOLATE]       = 1.0f;
-    mSymbolWinMultipliers[2][SymbolType::COOKING_OIL]     = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::EGGS]            = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::FLOUR]           = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::GARLICS]         = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::LEMONS]          = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::STRAWBERRIES]    = 0.5f;
-    mSymbolWinMultipliers[2][SymbolType::SUGAR]           = 1.0f;
-    mSymbolWinMultipliers[2][SymbolType::CHOCOLATE_CAKE]  = 10.0f;
-    mSymbolWinMultipliers[2][SymbolType::STRAWBERRY_CAKE] = 10.0f;
-    mSymbolWinMultipliers[2][SymbolType::ROAST_CHICKEN]   = 7.5f;
-    mSymbolWinMultipliers[2][SymbolType::SCATTER]         = 1.0f;
+    mSymbolWinMultipliers[2][SymbolType::BUTTER]          = 1;
+    mSymbolWinMultipliers[2][SymbolType::CAMP_FIRE]       = 2;
+    mSymbolWinMultipliers[2][SymbolType::CHICKEN]         = 2;
+    mSymbolWinMultipliers[2][SymbolType::CHOCOLATE]       = 2;
+    mSymbolWinMultipliers[2][SymbolType::COOKING_OIL]     = 1;
+    mSymbolWinMultipliers[2][SymbolType::EGGS]            = 1;
+    mSymbolWinMultipliers[2][SymbolType::FLOUR]           = 1;
+    mSymbolWinMultipliers[2][SymbolType::GARLICS]         = 1;
+    mSymbolWinMultipliers[2][SymbolType::LEMONS]          = 1;
+    mSymbolWinMultipliers[2][SymbolType::STRAWBERRIES]    = 1;
+    mSymbolWinMultipliers[2][SymbolType::SUGAR]           = 1;
+    mSymbolWinMultipliers[2][SymbolType::CHOCOLATE_CAKE]  = 540;
+    mSymbolWinMultipliers[2][SymbolType::STRAWBERRY_CAKE] = 450;
+    mSymbolWinMultipliers[2][SymbolType::ROAST_CHICKEN]   = 450;
+    mSymbolWinMultipliers[2][SymbolType::SCATTER]         = 5;
 
     // 4x matches
-    mSymbolWinMultipliers[3][SymbolType::BUTTER]          = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::CAMP_FIRE]       = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::CHICKEN]         = 4.5f;
-    mSymbolWinMultipliers[3][SymbolType::CHOCOLATE]       = 3.0f;
-    mSymbolWinMultipliers[3][SymbolType::COOKING_OIL]     = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::EGGS]            = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::FLOUR]           = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::GARLICS]         = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::LEMONS]          = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::STRAWBERRIES]    = 1.5f;
-    mSymbolWinMultipliers[3][SymbolType::SUGAR]           = 3.0f;
-    mSymbolWinMultipliers[3][SymbolType::CHOCOLATE_CAKE]  = 30.0f;
-    mSymbolWinMultipliers[3][SymbolType::STRAWBERRY_CAKE] = 30.0f;
-    mSymbolWinMultipliers[3][SymbolType::ROAST_CHICKEN]   = 21.5f;
-    mSymbolWinMultipliers[3][SymbolType::SCATTER]         = 3.0f;
+    mSymbolWinMultipliers[3][SymbolType::BUTTER]          = 2;
+    mSymbolWinMultipliers[3][SymbolType::CAMP_FIRE]       = 4;
+    mSymbolWinMultipliers[3][SymbolType::CHICKEN]         = 4;
+    mSymbolWinMultipliers[3][SymbolType::CHOCOLATE]       = 4;
+    mSymbolWinMultipliers[3][SymbolType::COOKING_OIL]     = 2;
+    mSymbolWinMultipliers[3][SymbolType::EGGS]            = 2;
+    mSymbolWinMultipliers[3][SymbolType::FLOUR]           = 2;
+    mSymbolWinMultipliers[3][SymbolType::GARLICS]         = 2;
+    mSymbolWinMultipliers[3][SymbolType::LEMONS]          = 2;
+    mSymbolWinMultipliers[3][SymbolType::STRAWBERRIES]    = 2;
+    mSymbolWinMultipliers[3][SymbolType::SUGAR]           = 2;
+    mSymbolWinMultipliers[3][SymbolType::CHOCOLATE_CAKE]  = 1500;
+    mSymbolWinMultipliers[3][SymbolType::STRAWBERRY_CAKE] = 1400;
+    mSymbolWinMultipliers[3][SymbolType::ROAST_CHICKEN]   = 1400;
+    mSymbolWinMultipliers[3][SymbolType::SCATTER]         = 20;
     
     // 5x matches
-    mSymbolWinMultipliers[4][SymbolType::BUTTER]          = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::CAMP_FIRE]       = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::CHICKEN]         = 12.0f;
-    mSymbolWinMultipliers[4][SymbolType::CHOCOLATE]       = 6.0f;
-    mSymbolWinMultipliers[4][SymbolType::COOKING_OIL]     = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::EGGS]            = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::FLOUR]           = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::GARLICS]         = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::LEMONS]          = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::STRAWBERRIES]    = 4.5f;
-    mSymbolWinMultipliers[4][SymbolType::SUGAR]           = 9.0f;
-    mSymbolWinMultipliers[4][SymbolType::CHOCOLATE_CAKE]  = 90.0f;
-    mSymbolWinMultipliers[4][SymbolType::STRAWBERRY_CAKE] = 90.0f;
-    mSymbolWinMultipliers[4][SymbolType::ROAST_CHICKEN]   = 60.0f;
-    mSymbolWinMultipliers[4][SymbolType::SCATTER]         = 9.0f;
+    mSymbolWinMultipliers[4][SymbolType::BUTTER]          = 6;
+    mSymbolWinMultipliers[4][SymbolType::CAMP_FIRE]       = 12;
+    mSymbolWinMultipliers[4][SymbolType::CHICKEN]         = 12;
+    mSymbolWinMultipliers[4][SymbolType::CHOCOLATE]       = 12;
+    mSymbolWinMultipliers[4][SymbolType::COOKING_OIL]     = 6;
+    mSymbolWinMultipliers[4][SymbolType::EGGS]            = 6;
+    mSymbolWinMultipliers[4][SymbolType::FLOUR]           = 6;
+    mSymbolWinMultipliers[4][SymbolType::GARLICS]         = 6;
+    mSymbolWinMultipliers[4][SymbolType::LEMONS]          = 6;
+    mSymbolWinMultipliers[4][SymbolType::STRAWBERRIES]    = 6;
+    mSymbolWinMultipliers[4][SymbolType::SUGAR]           = 6;
+    mSymbolWinMultipliers[4][SymbolType::CHOCOLATE_CAKE]  = 8000;
+    mSymbolWinMultipliers[4][SymbolType::STRAWBERRY_CAKE] = 7000;
+    mSymbolWinMultipliers[4][SymbolType::ROAST_CHICKEN]   = 7000;
+    mSymbolWinMultipliers[4][SymbolType::SCATTER]         = 50;
+    mSymbolWinMultipliers[4][SymbolType::WILD]            = 100;
 }
 
 ///------------------------------------------------------------------------------------------------
