@@ -23,6 +23,7 @@ namespace slots
 
 Board::Board()
 {
+    math::SetControlSeed(1); // Just a nice initial board state
     RandomControlledBoardPopulation();
     mBoardReels[0].SetReelSymbol(3, SymbolType::SCATTER);
     mBoardReels[1].SetReelSymbol(4, SymbolType::SCATTER);
@@ -42,7 +43,7 @@ const BoardStateResolutionData& Board::ResolveBoardState()
         const auto& paylineResolutionData = ResolvePayline(static_cast<PaylineType>(i));
         (void)paylineResolutionData;
     }
-
+    
     return mCurrentResolutionData;
 }
 
@@ -53,7 +54,7 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
     PaylineResolutionData result = {};
     result.mPayline = payline;
     result.mWinMultiplier = 0.0f;
-
+    
     auto populateSymbolData = [&](const int row, const int col)
     {
         SymbolEntryData symbolEntryData;
@@ -62,7 +63,7 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         symbolEntryData.mSymbolType = mBoardReels[col].GetReelSymbol(row);
         result.mSymbolData.emplace_back(std::move(symbolEntryData));
     };
-
+    
     switch (payline)
     {
         case PaylineType::PAYLINE_1:  populateSymbolData(3, 0); populateSymbolData(3, 1); populateSymbolData(3, 2); populateSymbolData(3, 3); populateSymbolData(3, 4);
@@ -130,6 +131,22 @@ SymbolType Board::GetBoardSymbol(const int row, const int col) const
 
 ///------------------------------------------------------------------------------------------------
 
+int Board::GetSymbolCountInReel(const int reelIndex, const SymbolType symbol) const
+{
+    int count = 0;
+    for (int row = 0; row < REEL_LENGTH; ++row)
+    {
+        if (mBoardReels[reelIndex].GetReelSymbol(row) == symbol)
+        {
+            count++;
+        }
+    }
+    
+    return count;
+}
+
+///------------------------------------------------------------------------------------------------
+
 void Board::RandomControlledBoardPopulation()
 {
     for (int row = 0; row < REEL_LENGTH; ++row)
@@ -137,9 +154,7 @@ void Board::RandomControlledBoardPopulation()
         for (int col = 0; col < BOARD_COLS; ++col)
         {
             auto symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-            while (symbolType == SymbolType::CHOCOLATE_CAKE ||
-                   symbolType == SymbolType::STRAWBERRY_CAKE ||
-                   symbolType == SymbolType::ROAST_CHICKEN)
+            while (!IsValidSymbol(row, col, symbolType))
             {
                 symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
             }
@@ -151,8 +166,32 @@ void Board::RandomControlledBoardPopulation()
 
 ///------------------------------------------------------------------------------------------------
 
+bool Board::IsValidSymbol(const int row, const int col, const SymbolType symbol) const
+{
+    // No complex symbols
+    if (symbol == SymbolType::CHOCOLATE_CAKE ||
+        symbol == SymbolType::STRAWBERRY_CAKE ||
+        symbol == SymbolType::ROAST_CHICKEN)
+    {
+        return false;
+    }
+    
+    // No duplicate wild symbols per reel
+    if (symbol == SymbolType::WILD && GetSymbolCountInReel(col, SymbolType::WILD) > 0)
+    {
+        return false;
+    }
+    
+    // No duplicate scatter symbols per reel
+    if (symbol == SymbolType::SCATTER && GetSymbolCountInReel(col, SymbolType::SCATTER) > 0)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 ///------------------------------------------------------------------------------------------------
 
+}
 
