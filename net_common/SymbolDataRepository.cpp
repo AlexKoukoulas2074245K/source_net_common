@@ -19,8 +19,8 @@ namespace slots
 
 int SymbolDataRepository::GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const
 {
-    assert(matchingCount < mSymbolWinMultipliers.size());
-    return mSymbolWinMultipliers.at(matchingCount).at(symbolType);
+    assert(matchingCount <= mSymbolWinMultipliers.size());
+    return mSymbolWinMultipliers.at(matchingCount - 1).at(symbolType);
 }
 
 ///------------------------------------------------------------------------------------------------
@@ -45,9 +45,9 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers.resize(BOARD_COLS);
     
     // 1x matches
-    mSymbolWinMultipliers[0][SymbolType::ROAST_CHICKEN]   = 100;
-    mSymbolWinMultipliers[0][SymbolType::CHOCOLATE_CAKE]  = 90;
-    mSymbolWinMultipliers[0][SymbolType::STRAWBERRY_CAKE] = 90;
+    mSymbolWinMultipliers[0][SymbolType::ROAST_CHICKEN]   = 25;
+    mSymbolWinMultipliers[0][SymbolType::CHOCOLATE_CAKE]  = 20;
+    mSymbolWinMultipliers[0][SymbolType::STRAWBERRY_CAKE] = 20;
     
     // 3x matches
     mSymbolWinMultipliers[2][SymbolType::BUTTER]          = 1;
@@ -61,9 +61,9 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers[2][SymbolType::LEMONS]          = 1;
     mSymbolWinMultipliers[2][SymbolType::STRAWBERRIES]    = 1;
     mSymbolWinMultipliers[2][SymbolType::SUGAR]           = 1;
-    mSymbolWinMultipliers[2][SymbolType::CHOCOLATE_CAKE]  = 540;
-    mSymbolWinMultipliers[2][SymbolType::STRAWBERRY_CAKE] = 450;
-    mSymbolWinMultipliers[2][SymbolType::ROAST_CHICKEN]   = 450;
+    mSymbolWinMultipliers[2][SymbolType::CHOCOLATE_CAKE]  = 140;
+    mSymbolWinMultipliers[2][SymbolType::STRAWBERRY_CAKE] = 100;
+    mSymbolWinMultipliers[2][SymbolType::ROAST_CHICKEN]   = 100;
     mSymbolWinMultipliers[2][SymbolType::SCATTER]         = 5;
 
     // 4x matches
@@ -78,9 +78,9 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers[3][SymbolType::LEMONS]          = 2;
     mSymbolWinMultipliers[3][SymbolType::STRAWBERRIES]    = 2;
     mSymbolWinMultipliers[3][SymbolType::SUGAR]           = 2;
-    mSymbolWinMultipliers[3][SymbolType::CHOCOLATE_CAKE]  = 1500;
-    mSymbolWinMultipliers[3][SymbolType::STRAWBERRY_CAKE] = 1400;
-    mSymbolWinMultipliers[3][SymbolType::ROAST_CHICKEN]   = 1400;
+    mSymbolWinMultipliers[3][SymbolType::CHOCOLATE_CAKE]  = 500;
+    mSymbolWinMultipliers[3][SymbolType::STRAWBERRY_CAKE] = 400;
+    mSymbolWinMultipliers[3][SymbolType::ROAST_CHICKEN]   = 400;
     mSymbolWinMultipliers[3][SymbolType::SCATTER]         = 20;
     
     // 5x matches
@@ -95,9 +95,9 @@ void SymbolDataRepository::InitWithDefaultConfig()
     mSymbolWinMultipliers[4][SymbolType::LEMONS]          = 6;
     mSymbolWinMultipliers[4][SymbolType::STRAWBERRIES]    = 6;
     mSymbolWinMultipliers[4][SymbolType::SUGAR]           = 6;
-    mSymbolWinMultipliers[4][SymbolType::CHOCOLATE_CAKE]  = 8000;
-    mSymbolWinMultipliers[4][SymbolType::STRAWBERRY_CAKE] = 7000;
-    mSymbolWinMultipliers[4][SymbolType::ROAST_CHICKEN]   = 7000;
+    mSymbolWinMultipliers[4][SymbolType::CHOCOLATE_CAKE]  = 1000;
+    mSymbolWinMultipliers[4][SymbolType::STRAWBERRY_CAKE] = 1000;
+    mSymbolWinMultipliers[4][SymbolType::ROAST_CHICKEN]   = 1000;
     mSymbolWinMultipliers[4][SymbolType::SCATTER]         = 50;
     mSymbolWinMultipliers[4][SymbolType::WILD]            = 100;
 }

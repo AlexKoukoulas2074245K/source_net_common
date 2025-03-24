@@ -36,7 +36,8 @@ public:
     void PopulateBoardForSpin(const int spinId);
     void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
     SymbolType GetBoardSymbol(const int row, const int col) const;
-    int GetSymbolCountInReel(const int reelIndex, const SymbolType symbol) const;
+    int GetSymbolCountInEntireReel(const int reelIndex, const SymbolType symbol) const;
+    int GetSymbolCountInPlayableBoard(const SymbolType symbol) const;
 
 private:
     void RandomControlledBoardPopulation();

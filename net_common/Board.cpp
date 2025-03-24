@@ -142,23 +142,26 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         {
             result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::SCATTER, scatterCount);
             result.mSymbolData = initialSymbolData;
-            result.mFeature = true;
+            result.mScatter = true;
+            result.mWinSourceType = WinSourceType::SCATTER_5;
             return result;
         }
         else if (wildCount == 5)
         {
-            result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::WILD, scatterCount);
+            result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::WILD, wildCount);
             result.mSymbolData = initialSymbolData;
+            result.mWinSourceType = WinSourceType::WILD_5;
             return result;
         }
     }
     
-    // 3+ Scatters
+    // 3/4 Scatters
     if (scatterCount >= 3)
     {
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::SCATTER, scatterCount);
         result.mSymbolData = initialSymbolData;
-        result.mFeature = true;
+        result.mScatter = true;
+        result.mWinSourceType = symbolOccurrenceCount(SymbolType::SCATTER) == 3 ? WinSourceType::SCATTER_3 : WinSourceType::SCATTER_4;
         return result;
     }
     
@@ -181,7 +184,8 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         // Roast chicken tumble
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::ROAST_CHICKEN, 1);
         result.mSymbolData = initialSymbolData;
-        result.mTumbled = true;
+        result.mTumble = true;
+        result.mWinSourceType = WinSourceType::COMBO;
         return result;
     }
     
@@ -194,7 +198,8 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         // Chocolate Cake tumble
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::CHOCOLATE_CAKE, 1);
         result.mSymbolData = initialSymbolData;
-        result.mTumbled = true;
+        result.mTumble = true;
+        result.mWinSourceType = WinSourceType::COMBO;
         return result;
     }
     
@@ -207,7 +212,8 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         // Strawberry Cake tumble
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::STRAWBERRY_CAKE, 1);
         result.mSymbolData = initialSymbolData;
-        result.mTumbled = true;
+        result.mTumble = true;
+        result.mWinSourceType = WinSourceType::COMBO;
         return result;
     }
     
@@ -233,6 +239,16 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
             return result;
         }
     }
+    
+    // Make sure that the configuration is not WILDS + Scatter
+    if (firstNonSpecialSymbolIndex == -1)
+    {
+        if ((symbolOccurrenceCount(SymbolType::SCATTER) == 1 && symbolOccurrenceCount(SymbolType::WILD) == 4) ||
+            (symbolOccurrenceCount(SymbolType::SCATTER) == 2 && symbolOccurrenceCount(SymbolType::WILD) == 3))
+        result.mWinMultiplier = 0;
+        return result;
+    }
+    
     result.mSymbolData.push_back(initialSymbolData[0]);
     result.mSymbolData.push_back(initialSymbolData[1]);
     result.mSymbolData.push_back(initialSymbolData[2]);
@@ -244,6 +260,7 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
     }
     else
     {
+        result.mWinSourceType = WinSourceType::NORMAL_SYMBOL_3;
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
         return result;
     }
@@ -256,10 +273,12 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
     else
     {
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
+        result.mWinSourceType = WinSourceType::NORMAL_SYMBOL_4;
         return result;
     }
     
     result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
+    result.mWinSourceType = WinSourceType::NORMAL_SYMBOL_5;
 
     return result;
 }
@@ -292,7 +311,7 @@ SymbolType Board::GetBoardSymbol(const int row, const int col) const
 
 ///------------------------------------------------------------------------------------------------
 
-int Board::GetSymbolCountInReel(const int reelIndex, const SymbolType symbol) const
+int Board::GetSymbolCountInEntireReel(const int reelIndex, const SymbolType symbol) const
 {
     int count = 0;
     for (int row = 0; row < REEL_LENGTH; ++row)
@@ -303,6 +322,24 @@ int Board::GetSymbolCountInReel(const int reelIndex, const SymbolType symbol) co
         }
     }
     
+    return count;
+}
+
+///------------------------------------------------------------------------------------------------
+
+int Board::GetSymbolCountInPlayableBoard(const SymbolType symbol) const
+{
+    int count = 0;
+    for (int reelIndex = 0; reelIndex < BOARD_COLS; ++reelIndex)
+    {
+        for (int row = 3; row < 6; ++row)
+        {
+            if (mBoardReels[reelIndex].GetReelSymbol(row) == symbol)
+            {
+                count++;
+            }
+        }
+    }
     return count;
 }
 
@@ -323,6 +360,16 @@ void Board::RandomControlledBoardPopulation()
             SetBoardSymbol(row, col, symbolType);
         }
     }
+
+//    SetBoardSymbol(0, 0, SymbolType::BUTTER); SetBoardSymbol(0, 1, SymbolType::BUTTER); SetBoardSymbol(0, 2, SymbolType::BUTTER); SetBoardSymbol(0, 3, SymbolType::BUTTER); SetBoardSymbol(0, 4, SymbolType::BUTTER);
+//    SetBoardSymbol(1, 0, SymbolType::BUTTER); SetBoardSymbol(1, 1, SymbolType::BUTTER); SetBoardSymbol(1, 2, SymbolType::BUTTER); SetBoardSymbol(1, 3, SymbolType::BUTTER); SetBoardSymbol(1, 4, SymbolType::BUTTER);
+//    SetBoardSymbol(2, 0, SymbolType::BUTTER); SetBoardSymbol(2, 1, SymbolType::BUTTER); SetBoardSymbol(2, 2, SymbolType::BUTTER); SetBoardSymbol(2, 3, SymbolType::BUTTER); SetBoardSymbol(2, 4, SymbolType::BUTTER);
+//    SetBoardSymbol(3, 0, SymbolType::SUGAR);  SetBoardSymbol(3, 1, SymbolType::SUGAR);  SetBoardSymbol(3, 2, SymbolType::BUTTER); SetBoardSymbol(3, 3, SymbolType::SUGAR); SetBoardSymbol(3, 4, SymbolType::SUGAR);
+//    SetBoardSymbol(4, 0, SymbolType::SUGAR);  SetBoardSymbol(4, 1, SymbolType::SUGAR);  SetBoardSymbol(4, 2, SymbolType::SUGAR);  SetBoardSymbol(4, 3, SymbolType::BUTTER); SetBoardSymbol(4, 4, SymbolType::BUTTER);
+//    SetBoardSymbol(5, 0, SymbolType::SUGAR);  SetBoardSymbol(5, 1, SymbolType::SUGAR);  SetBoardSymbol(5, 2, SymbolType::BUTTER); SetBoardSymbol(5, 3, SymbolType::SUGAR); SetBoardSymbol(5, 4, SymbolType::SUGAR);
+//    SetBoardSymbol(6, 0, SymbolType::BUTTER); SetBoardSymbol(6, 1, SymbolType::BUTTER); SetBoardSymbol(6, 2, SymbolType::BUTTER); SetBoardSymbol(6, 3, SymbolType::BUTTER); SetBoardSymbol(6, 4, SymbolType::BUTTER);
+//    SetBoardSymbol(7, 0, SymbolType::BUTTER); SetBoardSymbol(7, 1, SymbolType::BUTTER); SetBoardSymbol(7, 2, SymbolType::BUTTER); SetBoardSymbol(7, 3, SymbolType::BUTTER); SetBoardSymbol(7, 4, SymbolType::BUTTER);
+//    SetBoardSymbol(8, 0, SymbolType::BUTTER); SetBoardSymbol(8, 1, SymbolType::BUTTER); SetBoardSymbol(8, 2, SymbolType::BUTTER); SetBoardSymbol(8, 3, SymbolType::BUTTER); SetBoardSymbol(8, 4, SymbolType::BUTTER);
 }
 
 ///------------------------------------------------------------------------------------------------
@@ -338,13 +385,13 @@ bool Board::IsValidSymbol(const int row, const int col, const SymbolType symbol)
     }
     
     // No duplicate wild symbols per reel
-    if (symbol == SymbolType::WILD && GetSymbolCountInReel(col, SymbolType::WILD) > 0)
+    if (symbol == SymbolType::WILD && GetSymbolCountInEntireReel(col, SymbolType::WILD) > 0)
     {
         return false;
     }
     
     // No duplicate scatter symbols per reel
-    if (symbol == SymbolType::SCATTER && GetSymbolCountInReel(col, SymbolType::SCATTER) > 0)
+    if (symbol == SymbolType::SCATTER && GetSymbolCountInEntireReel(col, SymbolType::SCATTER) > 0)
     {
         return false;
     }
