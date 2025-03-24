@@ -1,7 +1,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define LIB_VERSION "1.1.4"        // PATCH Updated automatically
-#define LIB_COMMIT_HASH "5c2bb27"  // Updated automatically every commit
+#define NET_COMMON_VERSION "1.1.5"        // PATCH Updated automatically
+#define NET_COMMON_COMMIT_HASH "c8c56ef"  // Updated automatically every commit
 
 #endif // VERSION_H

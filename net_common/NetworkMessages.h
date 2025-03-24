@@ -22,6 +22,7 @@
 #include "../util/Json.h"
 #endif
 
+#include "Version.h"
 #include <string>
 
 ///------------------------------------------------------------------------------------------------
@@ -62,6 +63,7 @@ struct ServerResponseData
 inline void PopulateMessageHeader(nlohmann::json& messageJson, const MessageType messageType)
 {
     messageJson["messageType"] = static_cast<int>(messageType);
+    messageJson["version"] = std::string(NET_COMMON_VERSION);
 }
 
 ///-----------------------------------------------------------------------------------------------
