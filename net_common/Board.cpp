@@ -32,6 +32,7 @@ Board::Board()
     mBoardReels[2].SetReelSymbol(5, SymbolType::SCATTER);
     mBoardReels[3].SetReelSymbol(4, SymbolType::SCATTER);
     mBoardReels[4].SetReelSymbol(3, SymbolType::SCATTER);
+    mBoardReels[2].SetReelSymbol(4, SymbolType::WILD);
 }
 
 ///------------------------------------------------------------------------------------------------
@@ -49,6 +50,37 @@ const BoardStateResolutionData& Board::ResolveBoardState()
             mCurrentResolutionData.mWinningPaylines.push_back(std::move(paylineResolutionData));
         }
     }
+    
+    // Handle scatters
+    const auto& scatterCoordinates = GetSymbolCoordinatesInPlayableBoard(SymbolType::SCATTER);
+    if (scatterCoordinates.size() >= 3)
+    {
+        PaylineResolutionData scatterPayline = {};
+        scatterPayline.mScatter = true;
+
+        for (const auto& coords: scatterCoordinates)
+        {
+            scatterPayline.mSymbolData.emplace_back(SymbolEntryData{ SymbolType::SCATTER, coords.second, coords.first });
+        }
+        
+        if (scatterCoordinates.size() == 3)
+        {
+            scatterPayline.mWinSourceType = WinSourceType::SCATTER_3;
+        }
+        else if (scatterCoordinates.size() == 4)
+        {
+            scatterPayline.mWinSourceType = WinSourceType::SCATTER_4;
+        }
+        else
+        {
+            scatterPayline.mWinSourceType = WinSourceType::SCATTER_5;
+        }
+        
+        scatterPayline.mWinMultiplier += SymbolDataRepository::GetInstance().GetSymbolWinMultiplier(SymbolType::SCATTER, static_cast<int>(scatterCoordinates.size()));
+        mCurrentResolutionData.mTotalWinMultiplier += scatterPayline.mWinMultiplier;
+        mCurrentResolutionData.mWinningPaylines.push_back(std::move(scatterPayline));
+    }
+    
     
     return mCurrentResolutionData;
 }
@@ -140,10 +172,8 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
     {
         if (scatterCount == 5)
         {
-            result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::SCATTER, scatterCount);
-            result.mSymbolData = initialSymbolData;
+            // Scatters are handled specially
             result.mScatter = true;
-            result.mWinSourceType = WinSourceType::SCATTER_5;
             return result;
         }
         else if (wildCount == 5)
@@ -158,10 +188,8 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
     // 3/4 Scatters
     if (scatterCount >= 3)
     {
-        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::SCATTER, scatterCount);
-        result.mSymbolData = initialSymbolData;
+        // Scatters are handled specially
         result.mScatter = true;
-        result.mWinSourceType = symbolOccurrenceCount(SymbolType::SCATTER) == 3 ? WinSourceType::SCATTER_3 : WinSourceType::SCATTER_4;
         return result;
     }
     
@@ -345,8 +373,36 @@ int Board::GetSymbolCountInPlayableBoard(const SymbolType symbol) const
 
 ///------------------------------------------------------------------------------------------------
 
+std::vector<std::pair<int, int>> Board::GetSymbolCoordinatesInPlayableBoard(const SymbolType symbol) const
+{
+    std::vector<std::pair<int, int>> result;
+    for (int reelIndex = 0; reelIndex < BOARD_COLS; ++reelIndex)
+    {
+        for (int row = 3; row < 6; ++row)
+        {
+            if (mBoardReels[reelIndex].GetReelSymbol(row) == symbol)
+            {
+                result.emplace_back(std::make_pair(row, reelIndex));
+            }
+        }
+    }
+    return result;
+}
+
+///------------------------------------------------------------------------------------------------
+
 void Board::RandomControlledBoardPopulation()
 {
+    // Reset board (to avoid side effects of board population from previous
+    // board configuration)
+    for (int row = 0; row < REEL_LENGTH; ++row)
+    {
+        for (int col = 0; col < BOARD_COLS; ++col)
+        {
+            SetBoardSymbol(row, col, SymbolType::BUTTER);
+        }
+    }
+
     for (int row = 0; row < REEL_LENGTH; ++row)
     {
         for (int col = 0; col < BOARD_COLS; ++col)
