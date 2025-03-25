@@ -37,6 +37,7 @@ public:
     void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
     SymbolType GetBoardSymbol(const int row, const int col) const;
     int GetSymbolCountInEntireReel(const int reelIndex, const SymbolType symbol) const;
+    int GetSymbolCountInPlayableReelArea(const int reelIndex, const SymbolType symbol) const;
     int GetSymbolCountInPlayableBoard(const SymbolType symbol) const;
     std::vector<std::pair<int, int>> GetSymbolCoordinatesInPlayableBoard(const SymbolType symbol) const;
     

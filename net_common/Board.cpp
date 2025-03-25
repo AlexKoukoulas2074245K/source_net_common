@@ -355,6 +355,22 @@ int Board::GetSymbolCountInEntireReel(const int reelIndex, const SymbolType symb
 
 ///------------------------------------------------------------------------------------------------
 
+int Board::GetSymbolCountInPlayableReelArea(const int reelIndex, const SymbolType symbol) const
+{
+    int count = 0;
+    for (int row = 3; row < 6; ++row)
+    {
+        if (mBoardReels[reelIndex].GetReelSymbol(row) == symbol)
+        {
+            count++;
+        }
+    }
+    
+    return count;
+}
+
+///------------------------------------------------------------------------------------------------
+
 int Board::GetSymbolCountInPlayableBoard(const SymbolType symbol) const
 {
     int count = 0;
@@ -408,6 +424,11 @@ void Board::RandomControlledBoardPopulation()
         for (int col = 0; col < BOARD_COLS; ++col)
         {
             auto symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            if (symbolType == SymbolType::SCATTER && GetSymbolCountInPlayableBoard(SymbolType::SCATTER) == 2)
+            {
+                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            }
+
             while (!IsValidSymbol(row, col, symbolType))
             {
                 symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
