@@ -33,6 +33,9 @@ public:
     SymbolDataRepository& operator = (SymbolDataRepository&&) = delete;
     
     int GetSymbolWinMultiplier(const SymbolType symbolType, const int matchingCount) const;
+    const std::vector<SymbolType>& GetIngredientsForRecipeSymbol(const SymbolType symbolType) const;
+    const std::unordered_map<SymbolType, std::vector<SymbolType>>& GetAllRecipesAndIngredientsMap() const;
+
 private:
     SymbolDataRepository();
     

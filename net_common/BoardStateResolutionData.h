@@ -67,7 +67,7 @@ struct PaylineResolutionData
     WinSourceType mWinSourceType;
     std::vector<SymbolEntryData> mSymbolData;
     int mWinMultiplier = 0;
-    bool mTumble = false;
+    bool mCombo = false;
     bool mScatter = false;
 };
 

@@ -33,7 +33,9 @@ enum class SymbolType
     ROAST_CHICKEN   = 13,
     WILD            = 14,
     SCATTER         = 15,
-    COUNT           = 16
+    WATER           = 16,
+    CHICKEN_SOUP    = 17,
+    COUNT           = 18
 };
 
 ///------------------------------------------------------------------------------------------------

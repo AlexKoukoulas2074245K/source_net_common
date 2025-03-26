@@ -202,49 +202,47 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
         return result;
     }
     
-    // Check for tumble/combo
-    if (symbolOccurrenceCount(SymbolType::CHICKEN) == 1 &&
-        symbolOccurrenceCount(SymbolType::COOKING_OIL) == 1 &&
-        symbolOccurrenceCount(SymbolType::GARLICS) == 1 &&
-        symbolOccurrenceCount(SymbolType::CAMP_FIRE) == 1 &&
-        symbolOccurrenceCount(SymbolType::LEMONS) == 1)
+    // Check for recipes
+    for (const auto& recipeEntry: symbolDataRepo.GetAllRecipesAndIngredientsMap())
     {
-        // Roast chicken tumble
-        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::ROAST_CHICKEN, 1);
-        result.mSymbolData = initialSymbolData;
-        result.mTumble = true;
-        result.mWinSourceType = WinSourceType::COMBO;
-        return result;
+        const auto& recipeSymbol = recipeEntry.first;
+        const auto& ingredients = recipeEntry.second;
+        auto testPaylineSymbols = initialSymbolData;
+        
+        for (const auto& ingredientSymbol: ingredients)
+        {
+            assert(!testPaylineSymbols.empty());
+            auto foundIter = std::find_if(testPaylineSymbols.begin(), testPaylineSymbols.end(), [ingredientSymbol](const SymbolEntryData& symbolEntryData){ return symbolEntryData.mSymbolType == ingredientSymbol; });
+            
+            // First check if we have the actual ingredient symbol
+            if (foundIter != testPaylineSymbols.end())
+            {
+                testPaylineSymbols.erase(foundIter);
+            }
+            else
+            {
+                // If not, check for a wild
+                foundIter = std::find_if(testPaylineSymbols.begin(), testPaylineSymbols.end(), [](const SymbolEntryData& symbolEntryData){ return symbolEntryData.mSymbolType == SymbolType::WILD; });
+                if (foundIter != testPaylineSymbols.end())
+                {
+                    testPaylineSymbols.erase(foundIter);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        
+        if (testPaylineSymbols.empty())
+        {
+            result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(recipeSymbol, 1);
+            result.mSymbolData = initialSymbolData;
+            result.mCombo = true;
+            result.mWinSourceType = WinSourceType::COMBO;
+            return result;
+        }
     }
-    
-    if (symbolOccurrenceCount(SymbolType::BUTTER) == 1 &&
-        symbolOccurrenceCount(SymbolType::CHOCOLATE) == 1 &&
-        symbolOccurrenceCount(SymbolType::EGGS) == 1 &&
-        symbolOccurrenceCount(SymbolType::FLOUR) == 1 &&
-        symbolOccurrenceCount(SymbolType::SUGAR) == 1)
-    {
-        // Chocolate Cake tumble
-        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::CHOCOLATE_CAKE, 1);
-        result.mSymbolData = initialSymbolData;
-        result.mTumble = true;
-        result.mWinSourceType = WinSourceType::COMBO;
-        return result;
-    }
-    
-    if (symbolOccurrenceCount(SymbolType::BUTTER) == 1 &&
-        symbolOccurrenceCount(SymbolType::STRAWBERRIES) == 1 &&
-        symbolOccurrenceCount(SymbolType::EGGS) == 1 &&
-        symbolOccurrenceCount(SymbolType::FLOUR) == 1 &&
-        symbolOccurrenceCount(SymbolType::SUGAR) == 1)
-    {
-        // Strawberry Cake tumble
-        result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(SymbolType::STRAWBERRY_CAKE, 1);
-        result.mSymbolData = initialSymbolData;
-        result.mTumble = true;
-        result.mWinSourceType = WinSourceType::COMBO;
-        return result;
-    }
-    
     
     // At this point we need to scan up to firstNonSpecialSymbolIndex
     // and make sure that if it's not == 0, then it needs to be
@@ -428,6 +426,10 @@ void Board::RandomControlledBoardPopulation()
             {
                 symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
             }
+            else if (symbolType == SymbolType::WILD)
+            {
+                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            }
 
             while (!IsValidSymbol(row, col, symbolType))
             {
@@ -454,9 +456,7 @@ void Board::RandomControlledBoardPopulation()
 bool Board::IsValidSymbol(const int row, const int col, const SymbolType symbol) const
 {
     // No complex symbols
-    if (symbol == SymbolType::CHOCOLATE_CAKE ||
-        symbol == SymbolType::STRAWBERRY_CAKE ||
-        symbol == SymbolType::ROAST_CHICKEN)
+    if (SymbolDataRepository::GetInstance().GetAllRecipesAndIngredientsMap().count(symbol))
     {
         return false;
     }
