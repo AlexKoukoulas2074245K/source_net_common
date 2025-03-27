@@ -30,7 +30,6 @@ class Reel
 public:
     Reel();
     
-    void AddNewReelSymbol(const SymbolType symbol);
     void SetReelSymbol(const int index, const SymbolType symbol);
     SymbolType GetReelSymbol(const int index) const;
 

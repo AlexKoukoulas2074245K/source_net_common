@@ -16,10 +16,47 @@
 #include "../util/MathUtils.h"
 #endif
 
+#if __has_include(<engine/utils/Logging.h>)
+#include <engine/utils/Logging.h>
+#else
+#include "../util/Logging.h"
+#endif
+
 ///------------------------------------------------------------------------------------------------
 
 namespace slots
 {
+
+///------------------------------------------------------------------------------------------------
+
+static const std::unordered_map<SymbolType, std::string> DEBUG_SYMBOL_NAMES =
+{
+    { SymbolType::BUTTER, "Butter" },
+    { SymbolType::CAMP_FIRE, "CampFire" },
+    { SymbolType::CHICKEN, "Chicken" },
+    { SymbolType::CHOCOLATE, "Chocolate" },
+    { SymbolType::COOKING_OIL, "CookingOil" },
+    { SymbolType::EGGS, "Eggs" },
+    { SymbolType::FLOUR, "Flour" },
+    { SymbolType::GARLICS, "Garlics" },
+    { SymbolType::LEMONS, "Lemons" },
+    { SymbolType::STRAWBERRIES, "Strawberries" },
+    { SymbolType::SUGAR, "Sugar" },
+    { SymbolType::WATER, "Water" },
+    { SymbolType::CHOCOLATE_CAKE, "ChocolateCake" },
+    { SymbolType::STRAWBERRY_CAKE, "StrawberryCake" },
+    { SymbolType::ROAST_CHICKEN, "RoastChicken" },
+    { SymbolType::WILD, "Wild" },
+    { SymbolType::SCATTER, "Scatter" },
+    { SymbolType::CHICKEN_SOUP, "ChickenSoup" }
+};
+
+///------------------------------------------------------------------------------------------------
+
+const std::string& Board::GetSymbolDebugName(const SymbolType symbol)
+{
+    return DEBUG_SYMBOL_NAMES.at(symbol);
+}
 
 ///------------------------------------------------------------------------------------------------
 
@@ -48,6 +85,11 @@ const BoardStateResolutionData& Board::ResolveBoardState()
         {
             mCurrentResolutionData.mTotalWinMultiplier += paylineResolutionData.mWinMultiplier;
             mCurrentResolutionData.mWinningPaylines.push_back(std::move(paylineResolutionData));
+        }
+        
+        if (paylineResolutionData.mCombo)
+        {
+            mCurrentResolutionData.mShouldTumble = true;
         }
     }
     
@@ -83,6 +125,80 @@ const BoardStateResolutionData& Board::ResolveBoardState()
     
     
     return mCurrentResolutionData;
+}
+
+///------------------------------------------------------------------------------------------------
+
+TumbleResolutionData Board::ResolveBoardTumble()
+{
+    TumbleResolutionData tumbleResolutionData = {};
+    
+    for (const auto& paylineData: mCurrentResolutionData.mWinningPaylines)
+    {
+        if (paylineData.mCombo)
+        {
+            // Destroy combo payline
+            for (const auto& symbolEntryData: paylineData.mSymbolData)
+            {
+                tumbleResolutionData.mDestroyedCoords.insert(symbolEntryData);
+            }
+        }
+    }
+    
+    for (const auto& paylineData: mCurrentResolutionData.mWinningPaylines)
+    {
+        if (paylineData.mCombo)
+        {
+            // Place combo symbols
+            for (const auto& symbolEntryData: paylineData.mSymbolData)
+            {
+                if (!tumbleResolutionData.mPlacedCombosCoords.contains(symbolEntryData))
+                {
+                    // Replace symbol with combo noe
+                    SymbolEntryData newEntryData = symbolEntryData;
+                    newEntryData.mSymbolType = paylineData.mComboSymbol;
+                    
+                    // Insert to finalised placement coords and remove from destroyed ones
+                    tumbleResolutionData.mPlacedCombosCoords.insert(newEntryData);
+                    tumbleResolutionData.mDestroyedCoords.erase(newEntryData);
+                    
+                    break;
+                }
+            }
+        }
+    }
+
+    // Sanity check that we are not planning to destroy a place combo symbol entry
+    for (const auto& entry: tumbleResolutionData.mDestroyedCoords)
+    {
+        assert(!tumbleResolutionData.mPlacedCombosCoords.contains(entry));
+    }
+    
+    // Perform board additions
+    for (const auto& comboSymbolEntryDataToPlace: tumbleResolutionData.mPlacedCombosCoords)
+    {
+        SetBoardSymbol(comboSymbolEntryDataToPlace.mRow, comboSymbolEntryDataToPlace.mCol, comboSymbolEntryDataToPlace.mSymbolType);
+    }
+    
+    // Perform Tumble
+    auto destroyedCoordsCopy = tumbleResolutionData.mDestroyedCoords;
+    auto iter = destroyedCoordsCopy.begin();
+    while (iter != destroyedCoordsCopy.end())
+    {
+        const auto& symbolEntryDataToDestroy = *iter;
+        for (int row = symbolEntryDataToDestroy.mRow; row > 0; --row)
+        {
+            SetBoardSymbol(row, symbolEntryDataToDestroy.mCol, GetBoardSymbol(row - 1, symbolEntryDataToDestroy.mCol));
+        }
+        
+        auto newSymbol = GenerateNewSymbolForCoords(0, symbolEntryDataToDestroy.mCol);
+        SetBoardSymbol(0, symbolEntryDataToDestroy.mCol, newSymbol);
+        
+        tumbleResolutionData.mNewlyCreatedSymbolData.emplace_back(SymbolEntryData{newSymbol, 0, symbolEntryDataToDestroy.mCol});
+        iter = destroyedCoordsCopy.erase(iter);
+    }
+    
+    return tumbleResolutionData;
 }
 
 ///------------------------------------------------------------------------------------------------
@@ -239,6 +355,7 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
             result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(recipeSymbol, 1);
             result.mSymbolData = initialSymbolData;
             result.mCombo = true;
+            result.mComboSymbol = recipeSymbol;
             result.mWinSourceType = WinSourceType::COMBO;
             return result;
         }
@@ -421,22 +538,8 @@ void Board::RandomControlledBoardPopulation()
     {
         for (int col = 0; col < BOARD_COLS; ++col)
         {
-            auto symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-            if (symbolType == SymbolType::SCATTER && GetSymbolCountInPlayableBoard(SymbolType::SCATTER) == 2)
-            {
-                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-            }
-            else if (symbolType == SymbolType::WILD)
-            {
-                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-            }
-
-            while (!IsValidSymbol(row, col, symbolType))
-            {
-                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-            }
-            
-            SetBoardSymbol(row, col, symbolType);
+            auto newSymbol = GenerateNewSymbolForCoords(row, col);
+            SetBoardSymbol(row, col, newSymbol);
         }
     }
 
@@ -449,6 +552,27 @@ void Board::RandomControlledBoardPopulation()
 //    SetBoardSymbol(6, 0, SymbolType::BUTTER); SetBoardSymbol(6, 1, SymbolType::BUTTER); SetBoardSymbol(6, 2, SymbolType::BUTTER); SetBoardSymbol(6, 3, SymbolType::BUTTER); SetBoardSymbol(6, 4, SymbolType::BUTTER);
 //    SetBoardSymbol(7, 0, SymbolType::BUTTER); SetBoardSymbol(7, 1, SymbolType::BUTTER); SetBoardSymbol(7, 2, SymbolType::BUTTER); SetBoardSymbol(7, 3, SymbolType::BUTTER); SetBoardSymbol(7, 4, SymbolType::BUTTER);
 //    SetBoardSymbol(8, 0, SymbolType::BUTTER); SetBoardSymbol(8, 1, SymbolType::BUTTER); SetBoardSymbol(8, 2, SymbolType::BUTTER); SetBoardSymbol(8, 3, SymbolType::BUTTER); SetBoardSymbol(8, 4, SymbolType::BUTTER);
+}
+
+///------------------------------------------------------------------------------------------------
+
+SymbolType Board::GenerateNewSymbolForCoords(const int row, const int col) const
+{
+    auto symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+    if (symbolType == SymbolType::SCATTER && GetSymbolCountInPlayableBoard(SymbolType::SCATTER) == 2)
+    {
+        symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+    }
+    else if (symbolType == SymbolType::WILD)
+    {
+        symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+    }
+
+    while (!IsValidSymbol(row, col, symbolType))
+    {
+        symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+    }
+    return symbolType;
 }
 
 ///------------------------------------------------------------------------------------------------
@@ -474,6 +598,32 @@ bool Board::IsValidSymbol(const int row, const int col, const SymbolType symbol)
     }
 
     return true;
+}
+
+///------------------------------------------------------------------------------------------------
+
+void Board::PrintBoardDebug()
+{
+    logging::Log(logging::LogType::INFO, "\n");
+    for (auto row = 0; row < REEL_LENGTH; ++row)
+    {
+        if (row == 3)
+        {
+            logging::Log(logging::LogType::INFO, "======================================== Begin Playable Area ===========================================");
+        }
+        else if (row == 6)
+        {
+            logging::Log(logging::LogType::INFO, "========================================================================================================");
+        }
+
+        logging::Log(logging::LogType::INFO, "%-20s %-20s %-20s %-20s %-20s",
+            GetSymbolDebugName(GetBoardSymbol(row, 0)).c_str(),
+            GetSymbolDebugName(GetBoardSymbol(row, 1)).c_str(),
+            GetSymbolDebugName(GetBoardSymbol(row, 2)).c_str(),
+            GetSymbolDebugName(GetBoardSymbol(row, 3)).c_str(),
+            GetSymbolDebugName(GetBoardSymbol(row, 4)).c_str());
+    }
+    logging::Log(logging::LogType::INFO, "\n");
 }
 
 ///------------------------------------------------------------------------------------------------

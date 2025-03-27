@@ -12,6 +12,7 @@
 
 #include "Paylines.h"
 
+#include <set>
 #include <vector>
 #include <unordered_map>
 
@@ -61,10 +62,45 @@ struct SymbolEntryData
 
 ///------------------------------------------------------------------------------------------------
 
+struct SymbolEntryDataPlacementComparator
+{
+    bool operator()(const SymbolEntryData& lhs, const SymbolEntryData& rhs) const
+    {
+        return (lhs.mRow * 5 + lhs.mCol) <  (rhs.mRow * 5 + rhs.mCol);
+    }
+};
+
+struct SymbolEntryDataDestructionComparator
+{
+    bool operator()(const SymbolEntryData& lhs, const SymbolEntryData& rhs) const
+    {
+        if (lhs.mRow != rhs.mRow)
+        {
+            return lhs.mRow < rhs.mRow;
+        }
+        else
+        {
+            return lhs.mCol < rhs.mCol;
+        }
+    }
+};
+
+///------------------------------------------------------------------------------------------------
+
+struct TumbleResolutionData
+{
+    std::set<SymbolEntryData, SymbolEntryDataPlacementComparator> mPlacedCombosCoords;
+    std::set<SymbolEntryData, SymbolEntryDataDestructionComparator> mDestroyedCoords;
+    std::vector<SymbolEntryData> mNewlyCreatedSymbolData;
+};
+
+///------------------------------------------------------------------------------------------------
+
 struct PaylineResolutionData
 {
     PaylineType mPayline;
     WinSourceType mWinSourceType;
+    SymbolType mComboSymbol;
     std::vector<SymbolEntryData> mSymbolData;
     int mWinMultiplier = 0;
     bool mCombo = false;
@@ -77,6 +113,7 @@ struct BoardStateResolutionData
 {
     std::vector<PaylineResolutionData> mWinningPaylines;
     int mTotalWinMultiplier = 0;
+    bool mShouldTumble = false;
 };
 
 ///------------------------------------------------------------------------------------------------

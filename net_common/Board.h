@@ -28,10 +28,14 @@ inline constexpr int BOARD_COLS = 5;
 class Board
 {
 public:
+    static const std::string& GetSymbolDebugName(const SymbolType symbol);
+    
+public:
     Board();
     
     const BoardStateResolutionData& ResolveBoardState();
     PaylineResolutionData ResolvePayline(const PaylineType payline);
+    TumbleResolutionData ResolveBoardTumble();
 
     void PopulateBoardForSpin(const int spinId);
     void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
@@ -43,7 +47,9 @@ public:
     
 private:
     void RandomControlledBoardPopulation();
+    SymbolType GenerateNewSymbolForCoords(const int row, const int col) const;
     bool IsValidSymbol(const int row, const int col, const SymbolType symbol) const;
+    void PrintBoardDebug();
 
 private:
     Reel mBoardReels[BOARD_COLS];

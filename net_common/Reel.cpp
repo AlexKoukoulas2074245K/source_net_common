@@ -22,15 +22,6 @@ Reel::Reel()
 
 ///------------------------------------------------------------------------------------------------
 
-void Reel::AddNewReelSymbol(const SymbolType symbol)
-{
-    mReelSymbols.insert(mReelSymbols.begin(), symbol);
-    mReelSymbols.pop_back();
-    assert(mReelSymbols.size() == REEL_LENGTH);
-}
-
-///------------------------------------------------------------------------------------------------
-
 void Reel::SetReelSymbol(const int index, const SymbolType symbol)
 {
     assert(index < REEL_LENGTH);
