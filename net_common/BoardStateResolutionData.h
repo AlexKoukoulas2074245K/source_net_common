@@ -90,7 +90,8 @@ struct SymbolEntryDataDestructionComparator
 struct TumbleResolutionData
 {
     std::set<SymbolEntryData, SymbolEntryDataPlacementComparator> mPlacedCombosCoords;
-    std::set<SymbolEntryData, SymbolEntryDataDestructionComparator> mDestroyedCoords;
+    std::set<SymbolEntryData, SymbolEntryDataDestructionComparator> mDestroyedCoordsTopToBotom;
+    std::vector<SymbolEntryData> mComboIngredientsSymbolData;
     std::vector<SymbolEntryData> mNewlyCreatedSymbolData;
 };
 

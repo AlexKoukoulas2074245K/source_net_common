@@ -140,7 +140,7 @@ TumbleResolutionData Board::ResolveBoardTumble()
             // Destroy combo payline
             for (const auto& symbolEntryData: paylineData.mSymbolData)
             {
-                tumbleResolutionData.mDestroyedCoords.insert(symbolEntryData);
+                tumbleResolutionData.mDestroyedCoordsTopToBotom.insert(symbolEntryData);
             }
         }
     }
@@ -160,16 +160,22 @@ TumbleResolutionData Board::ResolveBoardTumble()
                     
                     // Insert to finalised placement coords and remove from destroyed ones
                     tumbleResolutionData.mPlacedCombosCoords.insert(newEntryData);
-                    tumbleResolutionData.mDestroyedCoords.erase(newEntryData);
+                    tumbleResolutionData.mDestroyedCoordsTopToBotom.erase(newEntryData);
                     
                     break;
                 }
+            }
+            
+            // Save symbol ingredient data in order per combo
+            for (const auto& symbolEntryData: paylineData.mSymbolData)
+            {
+                tumbleResolutionData.mComboIngredientsSymbolData.push_back(symbolEntryData);
             }
         }
     }
 
     // Sanity check that we are not planning to destroy a place combo symbol entry
-    for (const auto& entry: tumbleResolutionData.mDestroyedCoords)
+    for (const auto& entry: tumbleResolutionData.mDestroyedCoordsTopToBotom)
     {
         assert(!tumbleResolutionData.mPlacedCombosCoords.contains(entry));
     }
@@ -181,7 +187,7 @@ TumbleResolutionData Board::ResolveBoardTumble()
     }
     
     // Perform Tumble
-    auto destroyedCoordsCopy = tumbleResolutionData.mDestroyedCoords;
+    auto destroyedCoordsCopy = tumbleResolutionData.mDestroyedCoordsTopToBotom;
     auto iter = destroyedCoordsCopy.begin();
     while (iter != destroyedCoordsCopy.end())
     {
@@ -194,7 +200,7 @@ TumbleResolutionData Board::ResolveBoardTumble()
         auto newSymbol = GenerateNewSymbolForCoords(0, symbolEntryDataToDestroy.mCol);
         SetBoardSymbol(0, symbolEntryDataToDestroy.mCol, newSymbol);
         
-        tumbleResolutionData.mNewlyCreatedSymbolData.emplace_back(SymbolEntryData{newSymbol, 0, symbolEntryDataToDestroy.mCol});
+        tumbleResolutionData.mNewlyCreatedSymbolData.emplace_back(SymbolEntryData{newSymbol, symbolEntryDataToDestroy.mCol, 0});
         iter = destroyedCoordsCopy.erase(iter);
     }
     
