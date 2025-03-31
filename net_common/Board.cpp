@@ -75,22 +75,22 @@ Board::Board()
 
 ///------------------------------------------------------------------------------------------------
 
-const BoardStateResolutionData& Board::ResolveBoardState()
+BoardStateResolutionData Board::ResolveBoardState() const
 {
-    mCurrentResolutionData = {};
+    BoardStateResolutionData result = {};
     
     for (int i = 0; i < static_cast<int>(PaylineType::PAYLINE_COUNT); ++i)
     {
         const auto& paylineResolutionData = ResolvePayline(static_cast<PaylineType>(i));
         if (paylineResolutionData.mWinMultiplier > 0)
         {
-            mCurrentResolutionData.mTotalWinMultiplier += paylineResolutionData.mWinMultiplier;
-            mCurrentResolutionData.mWinningPaylines.push_back(std::move(paylineResolutionData));
+            result.mTotalWinMultiplier += paylineResolutionData.mWinMultiplier;
+            result.mWinningPaylines.push_back(std::move(paylineResolutionData));
         }
         
         if (paylineResolutionData.mCombo)
         {
-            mCurrentResolutionData.mShouldTumble = true;
+            result.mShouldTumble = true;
         }
     }
     
@@ -120,21 +120,21 @@ const BoardStateResolutionData& Board::ResolveBoardState()
         }
         
         scatterPayline.mWinMultiplier += SymbolDataRepository::GetInstance().GetSymbolWinMultiplier(SymbolType::SCATTER, static_cast<int>(scatterCoordinates.size()));
-        mCurrentResolutionData.mTotalWinMultiplier += scatterPayline.mWinMultiplier;
-        mCurrentResolutionData.mWinningPaylines.push_back(std::move(scatterPayline));
+        result.mTotalWinMultiplier += scatterPayline.mWinMultiplier;
+        result.mWinningPaylines.push_back(std::move(scatterPayline));
     }
     
     
-    return mCurrentResolutionData;
+    return result;
 }
 
 ///------------------------------------------------------------------------------------------------
 
-TumbleResolutionData Board::ResolveBoardTumble()
+TumbleResolutionData Board::ResolveBoardTumble(const BoardStateResolutionData& currentResolutionData)
 {
     TumbleResolutionData tumbleResolutionData = {};
     
-    for (const auto& paylineData: mCurrentResolutionData.mWinningPaylines)
+    for (const auto& paylineData: currentResolutionData.mWinningPaylines)
     {
         if (paylineData.mCombo)
         {
@@ -146,7 +146,7 @@ TumbleResolutionData Board::ResolveBoardTumble()
         }
     }
     
-    for (const auto& paylineData: mCurrentResolutionData.mWinningPaylines)
+    for (const auto& paylineData: currentResolutionData.mWinningPaylines)
     {
         if (paylineData.mCombo)
         {
@@ -210,7 +210,7 @@ TumbleResolutionData Board::ResolveBoardTumble()
 
 ///------------------------------------------------------------------------------------------------
 
-PaylineResolutionData Board::ResolvePayline(const PaylineType payline)
+PaylineResolutionData Board::ResolvePayline(const PaylineType payline) const
 {
     PaylineResolutionData result = {};
     result.mPayline = payline;

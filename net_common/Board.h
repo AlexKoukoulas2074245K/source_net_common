@@ -33,9 +33,9 @@ public:
 public:
     Board();
     
-    const BoardStateResolutionData& ResolveBoardState();
-    PaylineResolutionData ResolvePayline(const PaylineType payline);
-    TumbleResolutionData ResolveBoardTumble();
+    BoardStateResolutionData ResolveBoardState() const;
+    PaylineResolutionData ResolvePayline(const PaylineType payline) const;
+    TumbleResolutionData ResolveBoardTumble(const BoardStateResolutionData& currentResolutionData);
 
     void PopulateBoardForSpin(const int spinId);
     void SetBoardSymbol(const int row, const int col, const SymbolType symbol);
@@ -53,7 +53,6 @@ private:
 
 private:
     Reel mBoardReels[BOARD_COLS];
-    BoardStateResolutionData mCurrentResolutionData;
     int mCurrentRandomSeed;
 };
 
