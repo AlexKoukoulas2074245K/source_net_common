@@ -74,13 +74,13 @@ struct SymbolEntryDataDestructionComparator
 {
     bool operator()(const SymbolEntryData& lhs, const SymbolEntryData& rhs) const
     {
-        if (lhs.mRow != rhs.mRow)
+        if (lhs.mCol != rhs.mCol)
         {
-            return lhs.mRow < rhs.mRow;
+            return lhs.mCol < rhs.mCol;
         }
         else
         {
-            return lhs.mCol < rhs.mCol;
+            return lhs.mRow < rhs.mRow;
         }
     }
 };

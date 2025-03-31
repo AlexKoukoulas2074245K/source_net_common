@@ -48,7 +48,8 @@ static const std::unordered_map<SymbolType, std::string> DEBUG_SYMBOL_NAMES =
     { SymbolType::ROAST_CHICKEN, "RoastChicken" },
     { SymbolType::WILD, "Wild" },
     { SymbolType::SCATTER, "Scatter" },
-    { SymbolType::CHICKEN_SOUP, "ChickenSoup" }
+    { SymbolType::CHICKEN_SOUP, "ChickenSoup" },
+    { SymbolType::COUNT, "Invalid" },
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -154,7 +155,7 @@ TumbleResolutionData Board::ResolveBoardTumble()
             {
                 if (!tumbleResolutionData.mPlacedCombosCoords.contains(symbolEntryData))
                 {
-                    // Replace symbol with combo noe
+                    // Replace symbol with combo one
                     SymbolEntryData newEntryData = symbolEntryData;
                     newEntryData.mSymbolType = paylineData.mComboSymbol;
                     
@@ -552,9 +553,11 @@ void Board::RandomControlledBoardPopulation()
 //    SetBoardSymbol(0, 0, SymbolType::BUTTER); SetBoardSymbol(0, 1, SymbolType::BUTTER); SetBoardSymbol(0, 2, SymbolType::BUTTER); SetBoardSymbol(0, 3, SymbolType::BUTTER); SetBoardSymbol(0, 4, SymbolType::BUTTER);
 //    SetBoardSymbol(1, 0, SymbolType::BUTTER); SetBoardSymbol(1, 1, SymbolType::BUTTER); SetBoardSymbol(1, 2, SymbolType::BUTTER); SetBoardSymbol(1, 3, SymbolType::BUTTER); SetBoardSymbol(1, 4, SymbolType::BUTTER);
 //    SetBoardSymbol(2, 0, SymbolType::BUTTER); SetBoardSymbol(2, 1, SymbolType::BUTTER); SetBoardSymbol(2, 2, SymbolType::BUTTER); SetBoardSymbol(2, 3, SymbolType::BUTTER); SetBoardSymbol(2, 4, SymbolType::BUTTER);
-//    SetBoardSymbol(3, 0, SymbolType::SUGAR);  SetBoardSymbol(3, 1, SymbolType::SUGAR);  SetBoardSymbol(3, 2, SymbolType::BUTTER); SetBoardSymbol(3, 3, SymbolType::SUGAR); SetBoardSymbol(3, 4, SymbolType::SUGAR);
-//    SetBoardSymbol(4, 0, SymbolType::SUGAR);  SetBoardSymbol(4, 1, SymbolType::SUGAR);  SetBoardSymbol(4, 2, SymbolType::SUGAR);  SetBoardSymbol(4, 3, SymbolType::BUTTER); SetBoardSymbol(4, 4, SymbolType::BUTTER);
-//    SetBoardSymbol(5, 0, SymbolType::SUGAR);  SetBoardSymbol(5, 1, SymbolType::SUGAR);  SetBoardSymbol(5, 2, SymbolType::BUTTER); SetBoardSymbol(5, 3, SymbolType::SUGAR); SetBoardSymbol(5, 4, SymbolType::SUGAR);
+//    
+//    SetBoardSymbol(3, 0, SymbolType::SUGAR);  SetBoardSymbol(3, 1, SymbolType::BUTTER);  SetBoardSymbol(3, 2, SymbolType::STRAWBERRIES); SetBoardSymbol(3, 3, SymbolType::FLOUR); SetBoardSymbol(3, 4, SymbolType::EGGS);
+//    SetBoardSymbol(4, 0, SymbolType::SUGAR);  SetBoardSymbol(4, 1, SymbolType::BUTTER);  SetBoardSymbol(4, 2, SymbolType::CHOCOLATE);  SetBoardSymbol(4, 3, SymbolType::FLOUR); SetBoardSymbol(4, 4, SymbolType::EGGS);
+//    SetBoardSymbol(5, 0, SymbolType::SUGAR);  SetBoardSymbol(5, 1, SymbolType::CHOCOLATE);  SetBoardSymbol(5, 2, SymbolType::FLOUR); SetBoardSymbol(5, 3, SymbolType::EGGS); SetBoardSymbol(5, 4, SymbolType::BUTTER);
+//    
 //    SetBoardSymbol(6, 0, SymbolType::BUTTER); SetBoardSymbol(6, 1, SymbolType::BUTTER); SetBoardSymbol(6, 2, SymbolType::BUTTER); SetBoardSymbol(6, 3, SymbolType::BUTTER); SetBoardSymbol(6, 4, SymbolType::BUTTER);
 //    SetBoardSymbol(7, 0, SymbolType::BUTTER); SetBoardSymbol(7, 1, SymbolType::BUTTER); SetBoardSymbol(7, 2, SymbolType::BUTTER); SetBoardSymbol(7, 3, SymbolType::BUTTER); SetBoardSymbol(7, 4, SymbolType::BUTTER);
 //    SetBoardSymbol(8, 0, SymbolType::BUTTER); SetBoardSymbol(8, 1, SymbolType::BUTTER); SetBoardSymbol(8, 2, SymbolType::BUTTER); SetBoardSymbol(8, 3, SymbolType::BUTTER); SetBoardSymbol(8, 4, SymbolType::BUTTER);
