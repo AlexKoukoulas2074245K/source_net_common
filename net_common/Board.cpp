@@ -136,19 +136,15 @@ BoardStateResolutionData Board::ResolveBoardState()
 
         // Pick random recipe for scatter feature
         const auto& recipes = SymbolDataRepository::GetInstance().GetAllRecipesAndIngredientsMap();
-        mSelectedScatterComboSymbol = SymbolType::COUNT;
-        while (mSelectedScatterComboSymbol == SymbolType::COUNT)
+        std::vector<SymbolType> comboSymbols;
+        
+        for (const auto& recipeEntry: recipes)
         {
-            for (const auto& recipeEntry: recipes)
-            {
-                if (math::ControlledRandomInt(0, static_cast<int>(recipes.size()) - 1) == 0)
-                {
-                    mSelectedScatterComboSymbol = recipeEntry.first;
-                    break;
-                }
-            }
+            comboSymbols.push_back(recipeEntry.first);
         }
-    }    
+        
+        mSelectedScatterComboSymbol = comboSymbols[math::ControlledRandomInt() % comboSymbols.size()];
+    }
     
     return result;
 }
