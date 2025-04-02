@@ -33,7 +33,7 @@ public:
 public:
     Board();
     
-    BoardStateResolutionData ResolveBoardState() const;
+    BoardStateResolutionData ResolveBoardState();
     PaylineResolutionData ResolvePayline(const PaylineType payline) const;
     TumbleResolutionData ResolveBoardTumble(const BoardStateResolutionData& currentResolutionData);
 
@@ -43,6 +43,9 @@ public:
     int GetSymbolCountInEntireReel(const int reelIndex, const SymbolType symbol) const;
     int GetSymbolCountInPlayableReelArea(const int reelIndex, const SymbolType symbol) const;
     int GetSymbolCountInPlayableBoard(const SymbolType symbol) const;
+    int GetOustandingScatterSpins() const;
+    int GetScatterMultiplier() const;
+    SymbolType GetSelectedScatterComboSymbol() const;
     std::vector<std::pair<int, int>> GetSymbolCoordinatesInPlayableBoard(const SymbolType symbol) const;
     
 private:
@@ -53,7 +56,10 @@ private:
 
 private:
     Reel mBoardReels[BOARD_COLS];
+    int mOutstandingScatterSpins;
+    int mScatterMultiplier;
     int mCurrentRandomSeed;
+    SymbolType mSelectedScatterComboSymbol;
 };
 
 ///------------------------------------------------------------------------------------------------

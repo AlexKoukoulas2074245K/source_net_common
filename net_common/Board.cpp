@@ -62,6 +62,8 @@ const std::string& Board::GetSymbolDebugName(const SymbolType symbol)
 ///------------------------------------------------------------------------------------------------
 
 Board::Board()
+    : mOutstandingScatterSpins(0)
+    , mScatterMultiplier(0)
 {
     math::SetControlSeed(1); // Just a nice initial board state
     RandomControlledBoardPopulation();
@@ -75,15 +77,20 @@ Board::Board()
 
 ///------------------------------------------------------------------------------------------------
 
-BoardStateResolutionData Board::ResolveBoardState() const
+BoardStateResolutionData Board::ResolveBoardState()
 {
     BoardStateResolutionData result = {};
     
     for (int i = 0; i < static_cast<int>(PaylineType::PAYLINE_COUNT); ++i)
     {
-        const auto& paylineResolutionData = ResolvePayline(static_cast<PaylineType>(i));
+        auto paylineResolutionData = ResolvePayline(static_cast<PaylineType>(i));
         if (paylineResolutionData.mWinMultiplier > 0)
         {
+            if (mOutstandingScatterSpins > 0)
+            {
+                paylineResolutionData.mWinMultiplier *= mScatterMultiplier;
+            }
+
             result.mTotalWinMultiplier += paylineResolutionData.mWinMultiplier;
             result.mWinningPaylines.push_back(std::move(paylineResolutionData));
         }
@@ -122,8 +129,26 @@ BoardStateResolutionData Board::ResolveBoardState() const
         scatterPayline.mWinMultiplier += SymbolDataRepository::GetInstance().GetSymbolWinMultiplier(SymbolType::SCATTER, static_cast<int>(scatterCoordinates.size()));
         result.mTotalWinMultiplier += scatterPayline.mWinMultiplier;
         result.mWinningPaylines.push_back(std::move(scatterPayline));
-    }
-    
+        
+        // Scatter spins always equal to the number of scatter symbols on board
+        mOutstandingScatterSpins = static_cast<int>(scatterCoordinates.size()) + 1;
+        mScatterMultiplier = 0;
+
+        // Pick random recipe for scatter feature
+        const auto& recipes = SymbolDataRepository::GetInstance().GetAllRecipesAndIngredientsMap();
+        mSelectedScatterComboSymbol = SymbolType::COUNT;
+        while (mSelectedScatterComboSymbol == SymbolType::COUNT)
+        {
+            for (const auto& recipeEntry: recipes)
+            {
+                if (math::ControlledRandomInt(0, static_cast<int>(recipes.size()) - 1) == 0)
+                {
+                    mSelectedScatterComboSymbol = recipeEntry.first;
+                    break;
+                }
+            }
+        }
+    }    
     
     return result;
 }
@@ -179,6 +204,7 @@ TumbleResolutionData Board::ResolveBoardTumble(const BoardStateResolutionData& c
     for (const auto& entry: tumbleResolutionData.mDestroyedCoordsTopToBotom)
     {
         assert(!tumbleResolutionData.mPlacedCombosCoords.contains(entry));
+        (void)entry;
     }
     
     // Perform board additions
@@ -410,7 +436,7 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline) const
     }
     else
     {
-        result.mWinSourceType = WinSourceType::NORMAL_SYMBOL_3;
+        result.mWinSourceType = symbolDataRepo.GetAllRecipesAndIngredientsMap().count(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType) ? WinSourceType::COMBO_SYMBOL_3 : WinSourceType::NORMAL_SYMBOL_3;
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
         return result;
     }
@@ -423,13 +449,12 @@ PaylineResolutionData Board::ResolvePayline(const PaylineType payline) const
     else
     {
         result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
-        result.mWinSourceType = WinSourceType::NORMAL_SYMBOL_4;
+        result.mWinSourceType = symbolDataRepo.GetAllRecipesAndIngredientsMap().count(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType) ? WinSourceType::COMBO_SYMBOL_4 : WinSourceType::NORMAL_SYMBOL_4;
         return result;
     }
     
     result.mWinMultiplier = symbolDataRepo.GetSymbolWinMultiplier(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType, static_cast<int>(result.mSymbolData.size()));
-    result.mWinSourceType = WinSourceType::NORMAL_SYMBOL_5;
-
+    result.mWinSourceType = symbolDataRepo.GetAllRecipesAndIngredientsMap().count(initialSymbolData[firstNonSpecialSymbolIndex].mSymbolType) ? WinSourceType::COMBO_SYMBOL_5: WinSourceType::NORMAL_SYMBOL_5;
     return result;
 }
 
@@ -511,6 +536,27 @@ int Board::GetSymbolCountInPlayableBoard(const SymbolType symbol) const
 
 ///------------------------------------------------------------------------------------------------
 
+int Board::GetOustandingScatterSpins() const
+{
+    return mOutstandingScatterSpins;
+}
+
+///------------------------------------------------------------------------------------------------
+
+int Board::GetScatterMultiplier() const
+{
+    return mScatterMultiplier;
+}
+
+///------------------------------------------------------------------------------------------------
+
+SymbolType Board::GetSelectedScatterComboSymbol() const
+{
+    return mSelectedScatterComboSymbol;
+}
+
+///------------------------------------------------------------------------------------------------
+
 std::vector<std::pair<int, int>> Board::GetSymbolCoordinatesInPlayableBoard(const SymbolType symbol) const
 {
     std::vector<std::pair<int, int>> result;
@@ -531,7 +577,19 @@ std::vector<std::pair<int, int>> Board::GetSymbolCoordinatesInPlayableBoard(cons
 
 void Board::RandomControlledBoardPopulation()
 {
-    // Reset board (to avoid side effects of board population from previous
+    // Handle scatter counters
+    if (mOutstandingScatterSpins > 0)
+    {
+        mOutstandingScatterSpins--;
+        mScatterMultiplier++;
+        
+        if (mOutstandingScatterSpins == 0)
+        {
+            mScatterMultiplier = 0;
+        }
+    }
+
+    // Reset board (to avoid side effects of invalid symbols in a reel of board population from previous
     // board configuration)
     for (int row = 0; row < REEL_LENGTH; ++row)
     {
@@ -567,20 +625,41 @@ void Board::RandomControlledBoardPopulation()
 
 SymbolType Board::GenerateNewSymbolForCoords(const int row, const int col) const
 {
-    auto symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-    if (symbolType == SymbolType::SCATTER && GetSymbolCountInPlayableBoard(SymbolType::SCATTER) == 2)
-    {
-        symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-    }
-    else if (symbolType == SymbolType::WILD)
-    {
-        symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
-    }
+    auto symbolType = SymbolType::COUNT;
 
-    while (!IsValidSymbol(row, col, symbolType))
+    if (mOutstandingScatterSpins <= 0)
     {
         symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+        if (symbolType == SymbolType::SCATTER && GetSymbolCountInPlayableBoard(SymbolType::SCATTER) == 2)
+        {
+            symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+        }
+        else if (symbolType == SymbolType::WILD)
+        {
+            symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+        }
+
+        while (!IsValidSymbol(row, col, symbolType))
+        {
+            symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+        }
     }
+    else // During scatter only ingredients of selected combo symbol & wild symbols can appear
+    {
+        const auto& ingredientsOfSelectedRecipe = SymbolDataRepository::GetInstance().GetIngredientsForRecipeSymbol(mSelectedScatterComboSymbol);
+        
+        while (std::find(ingredientsOfSelectedRecipe.begin(), ingredientsOfSelectedRecipe.end(), symbolType) == ingredientsOfSelectedRecipe.end() && symbolType != SymbolType::WILD)
+        {
+            symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            
+            if (symbolType == SymbolType::WILD)
+            {
+                symbolType = static_cast<slots::SymbolType>(math::ControlledRandomInt() % static_cast<int>(SymbolType::COUNT));
+            }
+        }
+    }
+    
+    assert(symbolType != SymbolType::COUNT);
     return symbolType;
 }
 

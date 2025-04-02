@@ -33,7 +33,10 @@ enum class WinSourceType
     COMBO,
     NORMAL_SYMBOL_5,
     NORMAL_SYMBOL_4,
-    NORMAL_SYMBOL_3
+    NORMAL_SYMBOL_3,
+    COMBO_SYMBOL_3,
+    COMBO_SYMBOL_4,
+    COMBO_SYMBOL_5
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -48,7 +51,10 @@ inline const std::unordered_map<WinSourceType, std::string> WIN_SOURCE_TYPE_NAME
     { WinSourceType::COMBO,           "COMBO" },
     { WinSourceType::NORMAL_SYMBOL_5, "NORMAL_SYMBOL_5" },
     { WinSourceType::NORMAL_SYMBOL_4, "NORMAL_SYMBOL_4" },
-    { WinSourceType::NORMAL_SYMBOL_3, "NORMAL_SYMBOL_3" }
+    { WinSourceType::NORMAL_SYMBOL_3, "NORMAL_SYMBOL_3" },
+    { WinSourceType::COMBO_SYMBOL_3,  "COMBO_SYMBOL_3" },
+    { WinSourceType::COMBO_SYMBOL_4,  "COMBO_SYMBOL_4" },
+    { WinSourceType::COMBO_SYMBOL_5,  "COMBO_SYMBOL_5" }
 };
 
 ///------------------------------------------------------------------------------------------------
