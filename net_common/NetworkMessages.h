@@ -37,11 +37,11 @@ enum class MessageType : uint8_t
 
 #pragma pack(push, 1)
 struct MessageHeader {
-    char version[16];
     MessageType type;
+    char version[16];
 };
 
-#define BEGIN_MESSAGE(messageName) struct messageName { MessageHeader __header { NET_COMMON_VERSION, MessageType::messageName };
+#define BEGIN_MESSAGE(messageName) struct messageName { MessageHeader __header { MessageType::messageName, NET_COMMON_VERSION };
 #define FIELD(name, type) type name;
 #define END_MESSAGE() };
 
