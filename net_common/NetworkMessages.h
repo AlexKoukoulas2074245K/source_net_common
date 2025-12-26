@@ -11,8 +11,13 @@
 ///------------------------------------------------------------------------------------------------
 
 #include <cstdint>
-#include <engine/utils/MathUtils.h>
 #include <net_common/Version.h>
+
+#if __has_include(<engine/utils/MathUtils.h>)
+#include <engine/utils/MathUtils.h>
+#else
+#include "../util/MathUtils.h"
+#endif
 
 ///------------------------------------------------------------------------------------------------
 /// Define Message Types
