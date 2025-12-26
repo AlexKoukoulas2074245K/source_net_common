@@ -41,7 +41,7 @@ struct MessageHeader {
     MessageType type;
 };
 
-#define BEGIN_MESSAGE(messageName) struct messageName { MessageHeader header { NET_COMMON_VERSION, MessageType::messageName };
+#define BEGIN_MESSAGE(messageName) struct messageName { MessageHeader __header { NET_COMMON_VERSION, MessageType::messageName };
 #define FIELD(name, type) type name;
 #define END_MESSAGE() };
 
