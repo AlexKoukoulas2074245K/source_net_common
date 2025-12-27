@@ -48,4 +48,54 @@ struct MessageHeader {
 #include <net_common/NetworkMessages.inc>
 
 #pragma pack(pop)
+
+enum class MessageVersionValidityEnum
+{
+    VALID,
+    INCOMING_MESSAGE_BEHIND_IN_VERSION,
+    INCOMING_MESSAGE_AHEAD_IN_VERSION
+};
+
+inline MessageVersionValidityEnum GetMessageVersionValidity(unsigned char* rawMessageData)
+{
+    char incomingVersion[16];
+    memcpy(incomingVersion, &rawMessageData[1], 16);
+    
+    auto cmpResult = strcmp(incomingVersion, NET_COMMON_VERSION);
+    
+    if (!cmpResult)
+    {
+        return MessageVersionValidityEnum::VALID;
+    }
+    else if (cmpResult < 0)
+    {
+        return MessageVersionValidityEnum::INCOMING_MESSAGE_BEHIND_IN_VERSION;
+    }
+    else
+    {
+        return MessageVersionValidityEnum::INCOMING_MESSAGE_AHEAD_IN_VERSION;
+    }
+}
+
+inline const char* GetMessageVersionValidityString(const MessageVersionValidityEnum value)
+{
+    switch (value)
+    {
+        case MessageVersionValidityEnum::VALID:
+        {
+            return "VALID";
+        } break;
+        
+        case MessageVersionValidityEnum::INCOMING_MESSAGE_BEHIND_IN_VERSION:
+        {
+            return "INCOMING_MESSAGE_BEHIND_IN_VERSION";
+        } break;
+            
+        case MessageVersionValidityEnum::INCOMING_MESSAGE_AHEAD_IN_VERSION:
+        {
+            return "INCOMING_MESSAGE_AHEAD_IN_VERSION";
+        } break;
+    }
+}
+
 #endif // NETWORK_MESSAGES_H
