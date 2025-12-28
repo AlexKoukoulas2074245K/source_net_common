@@ -11,6 +11,7 @@
 ///------------------------------------------------------------------------------------------------
 
 #include <cstdint>
+#include <enet/enet.h>
 #include <net_common/Version.h>
 
 #if __has_include(<engine/utils/MathUtils.h>)
@@ -48,6 +49,24 @@ struct MessageHeader {
 #include <net_common/NetworkMessages.inc>
 
 #pragma pack(pop)
+
+namespace channels
+{
+    static constexpr enet_uint32 UNRELIABLE = 0;
+    static constexpr enet_uint32 RELIABLE = 1;
+};
+
+inline void SendMessage(ENetPeer* toPeer, const void* message, const size_t messageSize, const enet_uint32 channel)
+{
+    ENetPacket* enetPacket = enet_packet_create(message, messageSize, channel);
+    enet_peer_send(toPeer, channel, enetPacket);
+}
+
+inline void BroadcastMessage(ENetHost* server, const void* message, const size_t messageSize, const enet_uint32 channel)
+{
+    ENetPacket* enetPacket = enet_packet_create(message, messageSize, channel);
+    enet_host_broadcast(server, channel, enetPacket);
+}
 
 enum class MessageVersionValidityEnum
 {

@@ -9,6 +9,10 @@ BEGIN_MESSAGE(AssignPlayerIdMessage)
 FIELD(playerId, uint32_t)
 END_MESSAGE()
 
+BEGIN_MESSAGE(PlayerDisconnectedMessage)
+FIELD(playerId, uint32_t)
+END_MESSAGE()
+
 BEGIN_MESSAGE(MoveMessage)
 FIELD(playerId, uint32_t)
 FIELD(position, glm::vec2)
