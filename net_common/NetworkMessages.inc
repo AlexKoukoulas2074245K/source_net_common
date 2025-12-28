@@ -22,6 +22,7 @@ END_MESSAGE()
 BEGIN_MESSAGE(SnapshotMessage)
 FIELD(playerId, uint32_t)
 FIELD(position, glm::vec2)
+FIELD(velocity, glm::vec2)
 END_MESSAGE()
 
 BEGIN_MESSAGE(AttackMessage)
