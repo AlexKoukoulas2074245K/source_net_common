@@ -78,6 +78,7 @@ struct ObjectData
     AnimationType currentAnimation;
     glm::vec3 position;
     glm::vec3 velocity;
+    float speed;
 };
 
 ///------------------------------------------------------------------------------------------------
