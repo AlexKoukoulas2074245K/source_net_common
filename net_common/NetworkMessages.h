@@ -41,14 +41,13 @@ struct MessageHeader {
     MessageType type;
     char version[16];
 };
+#pragma pack(pop)
 
 #define BEGIN_MESSAGE(messageName) struct messageName { MessageHeader __header { MessageType::messageName, NET_COMMON_VERSION };
 #define FIELD(name, type) type name;
 #define END_MESSAGE() };
 
 #include <net_common/NetworkMessages.inc>
-
-#pragma pack(pop)
 
 namespace channels
 {
