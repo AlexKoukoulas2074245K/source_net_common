@@ -36,12 +36,10 @@ enum class MessageType : uint8_t
 #undef FIELD
 #undef END_MESSAGE
 
-#pragma pack(push, 1)
 struct MessageHeader {
     MessageType type;
     char version[16];
 };
-#pragma pack(pop)
 
 #define BEGIN_MESSAGE(messageName) struct messageName { MessageHeader __header { MessageType::messageName, NET_COMMON_VERSION };
 #define FIELD(name, type) type name;
@@ -80,7 +78,6 @@ inline MessageVersionValidityEnum GetMessageVersionValidity(unsigned char* rawMe
     memcpy(incomingVersion, &rawMessageData[1], 16);
     
     auto cmpResult = strcmp(incomingVersion, NET_COMMON_VERSION);
-    
     if (!cmpResult)
     {
         return MessageVersionValidityEnum::VALID;
