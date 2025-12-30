@@ -41,6 +41,23 @@ enum class ProjectileType
     FIREBALL
 };
 
+enum class FacingDirection
+{
+    NORTH_WEST,
+    NORTH_EAST,
+    SOUTH_WEST,
+    SOUTH_EAST,
+    NORTH,
+    SOUTH,
+    WEST,
+    EAST
+};
+
+enum class AnimationType
+{
+    RUNNING
+};
+
 ///------------------------------------------------------------------------------------------------
 
 using objectId_t = uint64_t;
@@ -51,9 +68,10 @@ struct ObjectData
 {
     objectId_t objectId;
     ObjectType objectType;
+    FacingDirection facingDirection;
+    AnimationType currentAnimation;
     glm::vec3 position;
     glm::vec3 velocity;
-    int animationIndex;
 };
 
 ///------------------------------------------------------------------------------------------------
