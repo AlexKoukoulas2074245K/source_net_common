@@ -73,6 +73,7 @@ struct ObjectData
     objectId_t objectId;
     ObjectType objectType;
     AttackType attackType;
+    ProjectileType projectileType;
     FacingDirection facingDirection;
     AnimationType currentAnimation;
     glm::vec3 position;
