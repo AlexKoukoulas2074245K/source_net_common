@@ -46,14 +46,14 @@ enum class ProjectileType
 
 enum class FacingDirection
 {
+    SOUTH,
+    NORTH,
+    WEST,
+    EAST,
     NORTH_WEST,
     NORTH_EAST,
     SOUTH_WEST,
-    SOUTH_EAST,
-    NORTH,
-    SOUTH,
-    WEST,
-    EAST
+    SOUTH_EAST
 };
 
 enum class AnimationType
