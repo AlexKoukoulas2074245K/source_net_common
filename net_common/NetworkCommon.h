@@ -33,12 +33,14 @@ enum class ObjectType
 
 enum class AttackType
 {
+    NONE,
     MELEE,
     PROJECTILE
 };
 
 enum class ProjectileType
 {
+    NONE,
     FIREBALL
 };
 
@@ -70,6 +72,7 @@ struct ObjectData
 {
     objectId_t objectId;
     ObjectType objectType;
+    AttackType attackType;
     FacingDirection facingDirection;
     AnimationType currentAnimation;
     glm::vec3 position;
