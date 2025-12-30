@@ -56,6 +56,7 @@ enum class FacingDirection
 
 enum class AnimationType
 {
+    IDLE,
     RUNNING
 };
 
