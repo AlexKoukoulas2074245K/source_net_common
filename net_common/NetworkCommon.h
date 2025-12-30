@@ -30,6 +30,17 @@ enum class ObjectType
     STATIC
 };
 
+enum class AttackType
+{
+    MELEE,
+    PROJECTILE
+};
+
+enum class ProjectileType
+{
+    FIREBALL
+};
+
 ///------------------------------------------------------------------------------------------------
 
 using objectId_t = uint64_t;

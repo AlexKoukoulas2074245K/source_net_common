@@ -27,4 +27,6 @@ END_MESSAGE()
 
 BEGIN_MESSAGE(AttackMessage)
 FIELD(attackerId, objectId_t)
+FIELD(attackType, AttackType)
+FIELD(projectileType, ProjectileType)
 END_MESSAGE()
