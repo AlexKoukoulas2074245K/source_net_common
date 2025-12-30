@@ -5,33 +5,26 @@
 ///  Created by Alex Koukoulas on 26/12/2025
 ///------------------------------------------------------------------------------------------------
 
-BEGIN_MESSAGE(AssignPlayerIdMessage)
-FIELD(playerId, uint32_t)
+BEGIN_MESSAGE(PlayerConnectedMessage)
+FIELD(objectId, objectId_t)
 END_MESSAGE()
 
 BEGIN_MESSAGE(PlayerDisconnectedMessage)
-FIELD(playerId, uint32_t)
+FIELD(objectId, objectId_t)
 END_MESSAGE()
 
-BEGIN_MESSAGE(MoveMessage)
-FIELD(playerId, uint32_t)
-FIELD(position, glm::vec2)
-FIELD(velocity, glm::vec2)
-FIELD(animationIndex, int)
+BEGIN_MESSAGE(ObjectCreatedMessage)
+FIELD(objectData, ObjectData)
 END_MESSAGE()
 
-BEGIN_MESSAGE(SnapshotMessage)
-FIELD(playerId, uint32_t)
-FIELD(position, glm::vec2)
-FIELD(velocity, glm::vec2)
-FIELD(animationIndex, int)
+BEGIN_MESSAGE(ObjectDestroyedMessage)
+FIELD(objectId, objectId_t)
+END_MESSAGE()
+
+BEGIN_MESSAGE(ObjectStateUpdateMessage)
+FIELD(objectData, ObjectData)
 END_MESSAGE()
 
 BEGIN_MESSAGE(AttackMessage)
-FIELD(attackerId, uint32_t)
-END_MESSAGE()
-
-BEGIN_MESSAGE(QuestCompleteMessage)
-FIELD(playerId, uint32_t)
-FIELD(questId, uint32_t)
+FIELD(attackerId, objectId_t)
 END_MESSAGE()

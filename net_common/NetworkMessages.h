@@ -12,6 +12,7 @@
 
 #include <cstdint>
 #include <enet/enet.h>
+#include <net_common/NetworkCommon.h>
 #include <net_common/Version.h>
 
 #if __has_include(<engine/utils/MathUtils.h>)
@@ -21,6 +22,12 @@
 #endif
 
 ///------------------------------------------------------------------------------------------------
+
+namespace network
+{
+
+///------------------------------------------------------------------------------------------------
+
 /// Define Message Types
 #define BEGIN_MESSAGE(messageName) messageName,
 #define FIELD(name, type)
@@ -49,8 +56,8 @@ struct MessageHeader {
 
 namespace channels
 {
-    static constexpr enet_uint32 UNRELIABLE = 0;
-    static constexpr enet_uint32 RELIABLE = 1;
+static constexpr enet_uint32 UNRELIABLE = 0;
+static constexpr enet_uint32 RELIABLE = 1;
 };
 
 inline void SendMessage(ENetPeer* toPeer, const void* message, const size_t messageSize, const enet_uint32 channel)
@@ -100,7 +107,7 @@ inline const char* GetMessageVersionValidityString(const MessageVersionValidityE
         {
             return "VALID";
         } break;
-        
+            
         case MessageVersionValidityEnum::INCOMING_MESSAGE_BEHIND_IN_VERSION:
         {
             return "INCOMING_MESSAGE_BEHIND_IN_VERSION";
@@ -111,6 +118,10 @@ inline const char* GetMessageVersionValidityString(const MessageVersionValidityE
             return "INCOMING_MESSAGE_AHEAD_IN_VERSION";
         } break;
     }
+}
+
+///------------------------------------------------------------------------------------------------
+
 }
 
 #endif // NETWORK_MESSAGES_H
