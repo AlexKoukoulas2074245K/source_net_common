@@ -27,6 +27,7 @@ enum class ObjectType
 {
     PLAYER,
     NPC,
+    ATTACK,
     STATIC
 };
 
