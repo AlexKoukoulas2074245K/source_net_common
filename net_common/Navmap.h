@@ -26,9 +26,10 @@ namespace networking
 
 enum class NavmapTileType
 {
-    WALKABLE,
-    SOLID,
-    WATER
+    WALKABLE = 0,
+    SOLID = 1,
+    WATER = 2,
+    COUNT = 3
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -40,9 +41,25 @@ inline glm::ivec4 GetColorFromNavmapTileType(const NavmapTileType tileType)
         case NavmapTileType::WALKABLE: return glm::ivec4(0, 0, 0, 0);
         case NavmapTileType::SOLID: return glm::ivec4(0, 0, 0, 255);
         case NavmapTileType::WATER: return glm::ivec4(0, 0, 255, 255);
+        default: break;
     }
     
     return glm::ivec4(0);
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline const char* GetNavmapTileTypeName(const NavmapTileType tileType)
+{
+    switch (tileType)
+    {
+        case NavmapTileType::WALKABLE: return "WALKABLE";
+        case NavmapTileType::SOLID: return "SOLID";
+        case NavmapTileType::WATER: return "WATER";
+        default: break;
+    }
+    
+    return "";
 }
 
 ///------------------------------------------------------------------------------------------------
