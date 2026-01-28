@@ -1,0 +1,30 @@
+{
+    "map_connections": {
+        "first_map.json": {
+            "bottom": "None",
+            "left": "None",
+            "right": "second_map.json",
+            "top": "None"
+        },
+        "second_map.json": {
+            "bottom": "None",
+            "left": "first_map.json",
+            "right": "None",
+            "top": "None"
+        }
+    },
+    "map_transforms": {
+        "first_map.json": {
+            "height": 0.25,
+            "width": 0.25,
+            "x": 0.0,
+            "y": -0.25
+        },
+        "second_map.json": {
+            "height": 0.25,
+            "width": 0.25,
+            "x": 0.25,
+            "y": -0.25
+        }
+    }
+}
