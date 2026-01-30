@@ -90,7 +90,7 @@ inline MessageVersionValidityEnum GetMessageVersionValidity(unsigned char* rawMe
     {
         return MessageVersionValidityEnum::VALID;
     }
-    else if (cmpResult < 0)
+    else if (cmpResult > 0)
     {
         return MessageVersionValidityEnum::INCOMING_MESSAGE_BEHIND_IN_VERSION;
     }
