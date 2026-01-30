@@ -81,10 +81,11 @@ enum class MessageVersionValidityEnum
 
 inline MessageVersionValidityEnum GetMessageVersionValidity(unsigned char* rawMessageData)
 {
-    char incomingVersion[16];
-    memcpy(incomingVersion, &rawMessageData[1], 16);
+    static std::string CURRENT_VERSION(NET_COMMON_VERSION);
     
-    auto cmpResult = strcmp(incomingVersion, NET_COMMON_VERSION);
+    const char* incomingVersion = reinterpret_cast<const char*>(rawMessageData + 1);
+    const auto& cmpResult = CURRENT_VERSION.compare(std::string(incomingVersion, strnlen(incomingVersion, 16)));
+
     if (!cmpResult)
     {
         return MessageVersionValidityEnum::VALID;
