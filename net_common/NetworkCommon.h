@@ -79,7 +79,22 @@ struct ObjectData
     glm::vec3 position;
     glm::vec3 velocity;
     float speed;
+    char currentMap[64] = {};
 };
+
+///------------------------------------------------------------------------------------------------
+
+inline std::string GetCurrentMapString(const ObjectData& objectData)
+{
+    return std::string(objectData.currentMap);
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline void SetCurrentMap(ObjectData& objectData, const std::string& map)
+{
+    std::strcpy(objectData.currentMap, map.c_str());
+}
 
 ///------------------------------------------------------------------------------------------------
 
