@@ -97,6 +97,7 @@ struct ObjectData
     glm::vec3 position;
     glm::vec3 velocity;
     float speed;
+    float objectScale;
     char currentMap[64] = {};
 };
 
