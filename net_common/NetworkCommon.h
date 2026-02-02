@@ -74,6 +74,17 @@ using objectId_t = uint64_t;
 
 ///------------------------------------------------------------------------------------------------
 
+struct ObjectColliderData
+{
+    ColliderType colliderType;
+    
+    // All floats proportional to SO's scale.
+    // For circle colliders x and y are set to the radius.
+    glm::vec2 colliderRelativeDimentions;
+};
+
+///------------------------------------------------------------------------------------------------
+
 struct ObjectData
 {
     objectId_t objectId;
@@ -82,21 +93,11 @@ struct ObjectData
     ProjectileType projectileType;
     FacingDirection facingDirection;
     AnimationType currentAnimation;
+    ObjectColliderData colliderData;
     glm::vec3 position;
     glm::vec3 velocity;
     float speed;
     char currentMap[64] = {};
-};
-
-///------------------------------------------------------------------------------------------------
-
-struct ObjectColliderData
-{
-    ColliderType colliderType;
-    
-    // All floats proportional to SO's scale.
-    // For circle colliders radius is x and y unset.
-    glm::vec2 colliderRelativeDimentions;
 };
 
 ///------------------------------------------------------------------------------------------------
