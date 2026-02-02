@@ -62,6 +62,12 @@ enum class AnimationType
     RUNNING
 };
 
+enum class ColliderType
+{
+    CIRCLE,
+    RECTANGLE
+};
+
 ///------------------------------------------------------------------------------------------------
 
 using objectId_t = uint64_t;
@@ -80,6 +86,17 @@ struct ObjectData
     glm::vec3 velocity;
     float speed;
     char currentMap[64] = {};
+};
+
+///------------------------------------------------------------------------------------------------
+
+struct ObjectColliderData
+{
+    ColliderType colliderType;
+    
+    // All floats proportional to SO's scale.
+    // For circle colliders radius is x and y unset.
+    glm::vec2 colliderRelativeDimentions;
 };
 
 ///------------------------------------------------------------------------------------------------

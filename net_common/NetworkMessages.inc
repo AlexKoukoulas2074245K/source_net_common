@@ -15,6 +15,7 @@ END_MESSAGE()
 
 BEGIN_MESSAGE(ObjectCreatedMessage)
 FIELD(objectData, ObjectData)
+FIELD(colliderData, ObjectColliderData)
 END_MESSAGE()
 
 BEGIN_MESSAGE(ObjectDestroyedMessage)
