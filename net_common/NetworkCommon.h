@@ -59,7 +59,9 @@ enum class FacingDirection
 enum class AnimationType
 {
     IDLE,
-    RUNNING
+    RUNNING,
+    CHANNELING,
+    ATTACKING
 };
 
 enum class ColliderType
