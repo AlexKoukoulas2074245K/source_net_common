@@ -117,6 +117,37 @@ inline void SetCurrentMap(ObjectData& objectData, const std::string& map)
 
 ///------------------------------------------------------------------------------------------------
 
+inline FacingDirection VecToFacingDirection(const glm::vec3& vec)
+{
+    // make sure dir is not zero-length
+    if (glm::length(vec) < 1e-6f) {
+        // default or handle error
+        return FacingDirection::SOUTH;
+    }
+    
+    // angle in radians: atan2 returns angle from -pi to pi
+    float angle = std::atan2(vec.y, vec.x);
+    
+    // convert to degrees (optional, but easier to reason about)
+    float degrees = glm::degrees(angle);
+    
+    // normalize to [0, 360)
+    if (degrees < 0.0f)
+        degrees += 360.0f;
+    
+    // angular sectors: 360/8 = 45 degrees each
+    if      (degrees >= 337.5f || degrees < 22.5f) return FacingDirection::EAST;
+    else if (degrees < 67.5f)                      return FacingDirection::NORTH_EAST;
+    else if (degrees < 112.5f)                     return FacingDirection::NORTH;
+    else if (degrees < 157.5f)                     return FacingDirection::NORTH_WEST;
+    else if (degrees < 202.5f)                     return FacingDirection::WEST;
+    else if (degrees < 247.5f)                     return FacingDirection::SOUTH_WEST;
+    else if (degrees < 292.5f)                     return FacingDirection::SOUTH;
+    else                                           return FacingDirection::SOUTH_EAST;
+}
+
+///------------------------------------------------------------------------------------------------
+
 }
 
 ///------------------------------------------------------------------------------------------------
