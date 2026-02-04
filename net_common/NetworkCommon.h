@@ -100,7 +100,7 @@ struct ObjectData
     AttackType attackType;
     ProjectileType projectileType;
     FacingDirection facingDirection;
-    ObjectState currentState;
+    ObjectState objectState;
     ObjectColliderData colliderData;
     glm::vec3 position;
     glm::vec3 velocity;
