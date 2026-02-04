@@ -95,6 +95,7 @@ struct ObjectColliderData
 struct ObjectData
 {
     objectId_t objectId;
+    objectId_t parentObjectId;
     ObjectType objectType;
     AttackType attackType;
     ProjectileType projectileType;
