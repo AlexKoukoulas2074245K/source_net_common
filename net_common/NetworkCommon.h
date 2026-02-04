@@ -56,12 +56,13 @@ enum class FacingDirection
     SOUTH_EAST
 };
 
-enum class AnimationType
+enum class ObjectState
 {
     IDLE,
     RUNNING,
-    CHANNELING,
-    ATTACKING
+    BEGIN_MELEE,
+    MELEE_ATTACK,
+    CASTING
 };
 
 enum class ColliderType
@@ -94,7 +95,7 @@ struct ObjectData
     AttackType attackType;
     ProjectileType projectileType;
     FacingDirection facingDirection;
-    AnimationType currentAnimation;
+    ObjectState currentState;
     ObjectColliderData colliderData;
     glm::vec3 position;
     glm::vec3 velocity;
