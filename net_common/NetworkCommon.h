@@ -156,6 +156,51 @@ inline FacingDirection VecToFacingDirection(const glm::vec3& vec)
 
 ///------------------------------------------------------------------------------------------------
 
+inline const char* GetFacingDirectionString(const FacingDirection facingDirection)
+{
+    switch (facingDirection)
+    {
+        case FacingDirection::SOUTH: return "SOUTH";
+        case FacingDirection::NORTH: return "NORTH";
+        case FacingDirection::WEST: return "WEST";
+        case FacingDirection::EAST: return "EAST";
+        case FacingDirection::NORTH_WEST: return "NORTH_WEST";
+        case FacingDirection::NORTH_EAST: return "NORTH_EAST";
+        case FacingDirection::SOUTH_WEST: return "SOUTH_WEST";
+        case FacingDirection::SOUTH_EAST: return "SOUTH_EAST";
+    }
+}
+
+
+///------------------------------------------------------------------------------------------------
+
+inline const char* GetObjectTypeString(const ObjectType objectType)
+{
+    switch (objectType)
+    {
+        case ObjectType::PLAYER: return "PLAYER";
+        case ObjectType::NPC: return "NPC";
+        case ObjectType::ATTACK: return "ATTACK";
+        case ObjectType::STATIC: return "STATIC";
+    }
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline const char* GetObjectStateString(const ObjectState objectState)
+{
+    switch (objectState)
+    {
+        case ObjectState::IDLE: return "IDLE";
+        case ObjectState::RUNNING: return "RUNNING";
+        case ObjectState::BEGIN_MELEE: return "BEGIN_MELEE";
+        case ObjectState::MELEE_ATTACK: return "MELEE_ATTACK";
+        case ObjectState::CASTING: return "CASTING";
+    }
+}
+
+///------------------------------------------------------------------------------------------------
+
 }
 
 ///------------------------------------------------------------------------------------------------
