@@ -42,3 +42,10 @@ FIELD(projectileType, ProjectileType)
 FIELD(allowed, bool)
 FIELD(chargeDurationSecs, float)
 END_MESSAGE()
+
+BEGIN_MESSAGE(DebugGetQuadtreeRequestMessage)
+END_MESSAGE()
+
+BEGIN_MESSAGE(DebugGetQuadtreeResponseMessage)
+FIELD(quadtreeData, DebugQuadtreeRequestData)
+END_MESSAGE()

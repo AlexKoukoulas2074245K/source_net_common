@@ -24,6 +24,7 @@ namespace network
 ///------------------------------------------------------------------------------------------------
 
 inline const float MAP_TILE_SIZE = 0.0625f;
+inline const float MAP_GAME_SCALE = 4.0f;
 
 ///------------------------------------------------------------------------------------------------
 
@@ -107,6 +108,15 @@ struct ObjectData
     float speed;
     float objectScale;
     char currentMap[64] = {};
+};
+
+///------------------------------------------------------------------------------------------------
+
+struct DebugQuadtreeRequestData
+{
+    glm::vec3 debugRectPositions[512] = {};
+    glm::vec3 debugRectDimensions[512] = {};
+    size_t debugRectCount;
 };
 
 ///------------------------------------------------------------------------------------------------

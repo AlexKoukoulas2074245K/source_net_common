@@ -10,7 +10,12 @@
 
 ///------------------------------------------------------------------------------------------------
 
+#if __has_include(<engine/utils/MathUtils.h>)
 #include <engine/utils/MathUtils.h>
+#else
+#include "../util/MathUtils.h"
+#endif
+
 #include <net_common/NetworkCommon.h>
 #include <vector>
 

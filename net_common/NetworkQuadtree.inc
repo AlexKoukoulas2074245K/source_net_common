@@ -4,7 +4,7 @@ inline constexpr int MAX_DEPTH = 5;
 
 ///-----------------------------------------------------------------------------------------------
 
-NetworkQuadtree::NetworkQuadtree(const glm::vec3& position, const glm::vec3& dimensions, const int depth /* 0 */)
+inline NetworkQuadtree::NetworkQuadtree(const glm::vec3& position, const glm::vec3& dimensions, const int depth /* 0 */)
     : mOrigin(position)
     , mDimensions(dimensions)
     , mDepth(depth)
@@ -19,28 +19,28 @@ NetworkQuadtree::NetworkQuadtree(const glm::vec3& position, const glm::vec3& dim
 
 ///-----------------------------------------------------------------------------------------------
 
-NetworkQuadtree::~NetworkQuadtree()
+inline NetworkQuadtree::~NetworkQuadtree()
 {
     InternalClear();
 }
 
 ///-----------------------------------------------------------------------------------------------
 
-const glm::vec3& NetworkQuadtree::GetOrigin() const
+inline const glm::vec3& NetworkQuadtree::GetOrigin() const
 {
     return mOrigin;
 }
 
 ///-----------------------------------------------------------------------------------------------
 
-const glm::vec3& NetworkQuadtree::GetDimensions() const
+inline const glm::vec3& NetworkQuadtree::GetDimensions() const
 {
     return mDimensions;
 }
 
 ///-----------------------------------------------------------------------------------------------
 
-std::vector<objectId_t> NetworkQuadtree::GetCollisionCandidates(const ObjectData& objectData) const
+inline std::vector<objectId_t> NetworkQuadtree::GetCollisionCandidates(const ObjectData& objectData) const
 {
     std::vector<objectId_t> collisionCandidates;
     InternalGetCollisionCandidates(objectData, collisionCandidates);
@@ -49,7 +49,7 @@ std::vector<objectId_t> NetworkQuadtree::GetCollisionCandidates(const ObjectData
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::PopulateSceneGraph(const std::vector<ObjectData>& netObjectData)
+inline void NetworkQuadtree::PopulateSceneGraph(const std::vector<ObjectData>& netObjectData)
 {
     for (const auto& objectData: netObjectData)
     {
@@ -60,14 +60,14 @@ void NetworkQuadtree::PopulateSceneGraph(const std::vector<ObjectData>& netObjec
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::Clear()
+inline void NetworkQuadtree::Clear()
 {
     InternalClear();
 }
 
 ///-----------------------------------------------------------------------------------------------
 
-std::vector<std::pair<glm::vec3, glm::vec3>> NetworkQuadtree::GetDebugRenderRectangles() const
+inline std::vector<std::pair<glm::vec3, glm::vec3>> NetworkQuadtree::GetDebugRenderRectangles() const
 {
     std::vector<std::pair<glm::vec3, glm::vec3>> debugRectangles;
     InternalGetDebugRenderRectangles(debugRectangles);
@@ -76,7 +76,7 @@ std::vector<std::pair<glm::vec3, glm::vec3>> NetworkQuadtree::GetDebugRenderRect
 
 ///-----------------------------------------------------------------------------------------------
 
-std::string NetworkQuadtree::GetFullMatchedQuadrantPositionString(const glm::vec3& objectPosition, const glm::vec3& objectDimensions) const
+inline std::string NetworkQuadtree::GetFullMatchedQuadrantPositionString(const glm::vec3& objectPosition, const glm::vec3& objectDimensions) const
 {
     std::string result;
     InternalGetMatchedQuadrantPositionString(objectPosition, objectDimensions, result);
@@ -85,7 +85,7 @@ std::string NetworkQuadtree::GetFullMatchedQuadrantPositionString(const glm::vec
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::InternalClear()
+inline void NetworkQuadtree::InternalClear()
 {
     mObjectsInNode.clear();
     for (int i = 0; i < 4; ++i)
@@ -100,7 +100,7 @@ void NetworkQuadtree::InternalClear()
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::InternalGetCollisionCandidates(const ObjectData& objectData, std::vector<objectId_t>& collisionCandidates) const
+inline void NetworkQuadtree::InternalGetCollisionCandidates(const ObjectData& objectData, std::vector<objectId_t>& collisionCandidates) const
 {
     if (mNodes[0] != nullptr)
     {
@@ -136,7 +136,7 @@ void NetworkQuadtree::InternalGetCollisionCandidates(const ObjectData& objectDat
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::InternalGetDebugRenderRectangles(std::vector<std::pair<glm::vec3, glm::vec3>>& debugRectangles) const
+inline void NetworkQuadtree::InternalGetDebugRenderRectangles(std::vector<std::pair<glm::vec3, glm::vec3>>& debugRectangles) const
 {
     const auto debugRectOrigin = glm::vec3(mOrigin.x, mOrigin.y, mOrigin.z);
     debugRectangles.push_back(std::make_pair(debugRectOrigin, mDimensions));
@@ -151,7 +151,7 @@ void NetworkQuadtree::InternalGetDebugRenderRectangles(std::vector<std::pair<glm
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::InternalGetMatchedQuadrantPositionString(const glm::vec3& objectPosition, const glm::vec3& objectDimensions, std::string& positionString) const
+inline void NetworkQuadtree::InternalGetMatchedQuadrantPositionString(const glm::vec3& objectPosition, const glm::vec3& objectDimensions, std::string& positionString) const
 {
     if (mNodes[0] == nullptr)
     {
@@ -168,7 +168,7 @@ void NetworkQuadtree::InternalGetMatchedQuadrantPositionString(const glm::vec3& 
 }
 
 ///-----------------------------------------------------------------------------------------------
-void NetworkQuadtree::Split()
+inline void NetworkQuadtree::Split()
 {
     const auto halfWidth  = mDimensions.x * 0.5f;
     const auto halfHeight = mDimensions.y * 0.5f;
@@ -186,7 +186,7 @@ void NetworkQuadtree::Split()
 
 ///-----------------------------------------------------------------------------------------------
 
-int NetworkQuadtree::GetMatchedQuadrant(const glm::vec3& objectPosition, const glm::vec3& objectDimensions) const
+inline int NetworkQuadtree::GetMatchedQuadrant(const glm::vec3& objectPosition, const glm::vec3& objectDimensions) const
 {
     int quadrant = -1;
     
@@ -229,7 +229,7 @@ int NetworkQuadtree::GetMatchedQuadrant(const glm::vec3& objectPosition, const g
 
 ///-----------------------------------------------------------------------------------------------
 
-void NetworkQuadtree::InsertObject(const objectId_t objectId, const glm::vec3& position, const glm::vec3& dimensions)
+inline void NetworkQuadtree::InsertObject(const objectId_t objectId, const glm::vec3& position, const glm::vec3& dimensions)
 {
     const auto isQuadtreeSplit = mNodes[0] != nullptr;
     
