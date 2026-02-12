@@ -84,6 +84,9 @@ inline NavmapTileType GetNavmapTileTypeFromColor(const glm::ivec4& color)
 /// the pixel data re non-owning here so that the client can easily provide
 /// a pointer to the loaded SDL surface data, and the server can just store the copy of
 /// the pixels somewhere whilst the navmap is alive.
+///
+/// IMPORTANT: All navmap coordinate related data follow the usual image processing
+/// rules of positive right  and positive down.
 class Navmap
 {
 public:

@@ -51,7 +51,7 @@ enum class ProjectileType
 
 enum class FacingDirection
 {
-    SOUTH,
+    SOUTH = 0,
     NORTH,
     WEST,
     EAST,
@@ -68,6 +68,14 @@ enum class ObjectState
     BEGIN_MELEE,
     MELEE_ATTACK,
     CASTING
+};
+
+enum class ObjectFaction
+{
+    GOOD,
+    EVIL,
+    NEUTRAL,
+    SPECIAL
 };
 
 enum class ColliderType
@@ -103,10 +111,12 @@ struct ObjectData
     FacingDirection facingDirection;
     ObjectState objectState;
     ObjectColliderData colliderData;
+    ObjectFaction objectFaction;
     glm::vec3 position;
     glm::vec3 velocity;
     float speed;
     float objectScale;
+    float actionTimer;
     char currentMap[64] = {};
 };
 
