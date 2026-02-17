@@ -23,6 +23,7 @@ namespace network
 
 ///------------------------------------------------------------------------------------------------
 
+inline const int NAVMAP_SIZE = 64;
 inline const float MAP_TILE_SIZE = 0.0625f;
 inline const float MAP_GAME_SCALE = 4.0f;
 
