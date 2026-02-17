@@ -97,8 +97,9 @@ public:
     
     inline glm::vec3 GetMapPositionFromNavmapCoord(const glm::ivec2& navmapCoord, const glm::vec2& mapPosition, const float mapScale, const float positionZ) const
     {
-        return glm::vec3(mapScale * ((static_cast<float>(navmapCoord.x))/mNavmapSize - 0.5f) + (mapPosition.x * mapScale),
-                         mapScale * (0.5f - (static_cast<float>(navmapCoord.y))/mNavmapSize) + (mapPosition.y * mapScale),
+        const float invSize = 1.0f/mNavmapSize;
+        return glm::vec3(mapScale * ((navmapCoord.x + 0.5f) * invSize - 0.5f) + (mapPosition.x * mapScale),
+                         mapScale * (0.5f - (navmapCoord.y + 0.5f) * invSize) + (mapPosition.y * mapScale),
                          positionZ);
     }
     
