@@ -49,3 +49,13 @@ END_MESSAGE()
 BEGIN_MESSAGE(DebugGetQuadtreeResponseMessage)
 FIELD(quadtreeData, DebugQuadtreeRequestData)
 END_MESSAGE()
+
+
+BEGIN_MESSAGE(DebugGetObjectPathRequestMessage)
+FIELD(objectId, objectId_t)
+END_MESSAGE()
+
+BEGIN_MESSAGE(DebugGetObjectPathResponseMessage)
+FIELD(objectId, objectId_t)
+FIELD(pathData, DebugObjectPathRequestData)
+END_MESSAGE()

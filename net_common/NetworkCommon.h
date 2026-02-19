@@ -132,6 +132,14 @@ struct DebugQuadtreeRequestData
 
 ///------------------------------------------------------------------------------------------------
 
+struct DebugObjectPathRequestData
+{
+    glm::vec3 debugPathPositions[128] = {};
+    size_t debugPathPositionsCount;
+};
+
+///------------------------------------------------------------------------------------------------
+
 inline std::string GetCurrentMapString(const ObjectData& objectData)
 {
     return std::string(objectData.currentMap);
