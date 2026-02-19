@@ -230,6 +230,42 @@ inline const char* GetObjectStateString(const ObjectState objectState)
 
 ///------------------------------------------------------------------------------------------------
 
+inline const char* GetObjectFactionString(const ObjectFaction objectFaction)
+{
+    switch (objectFaction)
+    {
+        case ObjectFaction::GOOD: return "GOOD";
+        case ObjectFaction::EVIL: return "EVIL";
+        case ObjectFaction::NEUTRAL: return "NEUTRAL";
+        case ObjectFaction::SPECIAL: return "SPECIAL";
+    }
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline const char* GetAttackTypeString(const AttackType attackType)
+{
+    switch (attackType)
+    {
+        case AttackType::NONE: return "NONE";
+        case AttackType::MELEE: return "MELEE";
+        case AttackType::PROJECTILE: return "PROJECTILE";
+    }
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline const char* GetProjectileTypeString(const ProjectileType projectileType)
+{
+    switch (projectileType)
+    {
+        case ProjectileType::NONE: return "NONE";
+        case ProjectileType::FIREBALL: return "FIREBALL";
+    }
+}
+
+///------------------------------------------------------------------------------------------------
+
 }
 
 ///------------------------------------------------------------------------------------------------
