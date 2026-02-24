@@ -96,8 +96,8 @@ struct ObjectColliderData
     ColliderType colliderType;
     
     // All floats proportional to SO's scale.
-    // For circle colliders x and y are set to the radius.
-    glm::vec2 colliderRelativeDimentions;
+    // For circle colliders x and y are set to the diameters.
+    glm::vec2 colliderRelativeDimensions;
 };
 
 ///------------------------------------------------------------------------------------------------
@@ -137,6 +137,57 @@ struct DebugObjectPathRequestData
     glm::vec3 debugPathPositions[128] = {};
     size_t debugPathPositionsCount;
 };
+
+///------------------------------------------------------------------------------------------------
+
+inline bool RectToRectIntersectionCheck(const ObjectData& lhs, const ObjectData& rhs)
+{
+    glm::vec2 lhsTopLeft(lhs.position.x - (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.x)/2.0f, lhs.position.y + (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.y)/2.0f);
+    glm::vec2 lhsBotRight(lhs.position.x + (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.x)/2.0f, lhs.position.y - (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.y)/2.0f);
+    
+    glm::vec2 rhsTopLeft(rhs.position.x - (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.x)/2.0f, rhs.position.y + (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.y)/2.0f);
+    glm::vec2 rhsBotRight(rhs.position.x + (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.x)/2.0f, rhs.position.y - (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.y)/2.0f);
+    
+    return !(lhsTopLeft.x > rhsBotRight.x || lhsBotRight.x < rhsTopLeft.x || lhsTopLeft.y < rhsBotRight.y || lhsBotRight.y > rhsTopLeft.y);
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline bool RectToCircleIntersectionCheck(const ObjectData& lhs, const ObjectData& rhs)
+{
+    glm::vec2 lhsTopLeft(lhs.position.x - (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.x)/2.0f, lhs.position.y + (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.y)/2.0f);
+    
+    auto clamp = [](float v, float min, float max) { return math::Max(min, math::Min(v, max)); };
+    
+    glm::vec2 clamped(clamp(rhs.position.x, lhsTopLeft.x, lhsTopLeft.x + (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.x)),
+                 clamp(rhs.position.y, lhsTopLeft.y - (lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.y), lhsTopLeft.y));
+    
+    glm::vec2 delta(rhs.position.x - clamped.x, rhs.position.y - clamped.y);
+    return delta.x * delta.x + delta.y * delta.y < (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.x/2.0f) * (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.y/2.0f);
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline bool CircleToCircleIntersectionCheck(const ObjectData& lhs, const ObjectData& rhs)
+{
+    const auto& centerDistanceSquared = ((lhs.position.x - rhs.position.x) * (lhs.position.x - rhs.position.x) + (lhs.position.y - rhs.position.y) * (lhs.position.y - rhs.position.y));
+    const auto& radiusSumSquared = ((lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.x)/2.0f + (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.x)/2.0f) * ((lhs.objectScale * lhs.colliderData.colliderRelativeDimensions.x)/2.0f + (rhs.objectScale * rhs.colliderData.colliderRelativeDimensions.x)/2.0f);
+    return centerDistanceSquared < radiusSumSquared;
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline bool CollidersIntersect(const ObjectData& lhs, const ObjectData& rhs)
+{
+    if (lhs.colliderData.colliderType == ColliderType::RECTANGLE)
+    {
+        return rhs.colliderData.colliderType == ColliderType::RECTANGLE ? RectToRectIntersectionCheck(lhs, rhs) : RectToCircleIntersectionCheck(lhs, rhs);
+    }
+    else // Circle
+    {
+        return rhs.colliderData.colliderType == ColliderType::RECTANGLE ? RectToCircleIntersectionCheck(rhs, lhs) : CircleToCircleIntersectionCheck(lhs, rhs);
+    }
+}
 
 ///------------------------------------------------------------------------------------------------
 

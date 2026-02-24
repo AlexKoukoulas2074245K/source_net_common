@@ -53,7 +53,7 @@ inline void NetworkQuadtree::PopulateSceneGraph(const std::vector<ObjectData>& n
 {
     for (const auto& objectData: netObjectData)
     {
-        glm::vec3 colliderDimensions(objectData.colliderData.colliderRelativeDimentions.x * objectData.objectScale, objectData.colliderData.colliderRelativeDimentions.y * objectData.objectScale, 1.0f);
+        glm::vec3 colliderDimensions(objectData.colliderData.colliderRelativeDimensions.x * objectData.objectScale, objectData.colliderData.colliderRelativeDimensions.y * objectData.objectScale, 1.0f);
         InsertObject(objectData.objectId, objectData.position, colliderDimensions);
     }
 }
@@ -104,7 +104,7 @@ inline void NetworkQuadtree::InternalGetCollisionCandidates(const ObjectData& ob
 {
     if (mNodes[0] != nullptr)
     {
-        glm::vec3 colliderDimensions(objectData.colliderData.colliderRelativeDimentions.x * objectData.objectScale, objectData.colliderData.colliderRelativeDimentions.y * objectData.objectScale, 1.0f);
+        glm::vec3 colliderDimensions(objectData.colliderData.colliderRelativeDimensions.x * objectData.objectScale, objectData.colliderData.colliderRelativeDimensions.y * objectData.objectScale, 1.0f);
         
         const auto quadrantIndex = GetMatchedQuadrant(objectData.position,  colliderDimensions);
         if (quadrantIndex != -1)
