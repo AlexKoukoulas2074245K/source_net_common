@@ -35,6 +35,12 @@ BEGIN_MESSAGE(CancelAttackMessage)
 FIELD(attackerId, objectId_t)
 END_MESSAGE()
 
+BEGIN_MESSAGE(NPCAttackMessage)
+FIELD(attackerId, objectId_t)
+FIELD(attackType, AttackType)
+FIELD(projectileType, ProjectileType)
+END_MESSAGE()
+
 BEGIN_MESSAGE(BeginAttackResponseMessage)
 FIELD(attackerId, objectId_t)
 FIELD(attackType, AttackType)
