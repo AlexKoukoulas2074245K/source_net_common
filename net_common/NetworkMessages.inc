@@ -61,6 +61,11 @@ BEGIN_MESSAGE(DebugGetObjectPathRequestMessage)
 FIELD(objectId, objectId_t)
 END_MESSAGE()
 
+BEGIN_MESSAGE(DebugSetSwarmParams)
+FIELD(separationDistance, float)
+FIELD(separationWeight, float)
+END_MESSAGE()
+
 BEGIN_MESSAGE(DebugGetObjectPathResponseMessage)
 FIELD(objectId, objectId_t)
 FIELD(pathData, DebugObjectPathRequestData)
