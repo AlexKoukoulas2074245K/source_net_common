@@ -41,6 +41,12 @@ FIELD(attackType, AttackType)
 FIELD(projectileType, ProjectileType)
 END_MESSAGE()
 
+BEGIN_MESSAGE(CharacterDamagedMessage)
+FIELD(objectId, objectId_t)
+FIELD(damagePoints, health_t)
+FIELD(newHealthPoints, health_t)
+END_MESSAGE()
+
 BEGIN_MESSAGE(BeginAttackResponseMessage)
 FIELD(attackerId, objectId_t)
 FIELD(attackType, AttackType)

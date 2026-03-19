@@ -88,6 +88,7 @@ enum class ColliderType
 ///------------------------------------------------------------------------------------------------
 
 using objectId_t = uint64_t;
+using health_t = int64_t;
 
 ///------------------------------------------------------------------------------------------------
 
@@ -115,9 +116,12 @@ struct ObjectData
     ObjectFaction objectFaction;
     glm::vec3 position;
     glm::vec3 velocity;
+    health_t maxHealthPoints;
+    health_t currentHealthPoints;
     float speed;
     float objectScale;
     float actionTimer;
+    char displayName[64] = {};
     char currentMap[64] = {};
 };
 
@@ -198,9 +202,23 @@ inline std::string GetCurrentMapString(const ObjectData& objectData)
 
 ///------------------------------------------------------------------------------------------------
 
+inline std::string GetDisplayName(const ObjectData& objectData)
+{
+    return std::string(objectData.displayName);
+}
+
+///------------------------------------------------------------------------------------------------
+
 inline void SetCurrentMap(ObjectData& objectData, const std::string& map)
 {
     std::strcpy(objectData.currentMap, map.c_str());
+}
+
+///------------------------------------------------------------------------------------------------
+
+inline void SetDisplayName(ObjectData& objectData, const std::string& displayName)
+{
+    std::strcpy(objectData.displayName, displayName.c_str());
 }
 
 ///------------------------------------------------------------------------------------------------
