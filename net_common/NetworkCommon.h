@@ -116,8 +116,9 @@ struct ObjectData
     ObjectFaction objectFaction;
     glm::vec3 position;
     glm::vec3 velocity;
-    health_t maxHealthPoints;
-    health_t currentHealthPoints;
+    health_t maxHealthPoints;     // For NPCs/Players
+    health_t currentHealthPoints; // For NPCs/Players
+    health_t damagePoints;        // For Attacks
     float speed;
     float objectScale;
     float actionTimer;
